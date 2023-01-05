@@ -1,16 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Tile : MonoBehaviour
-{
-    void OnMouseEnter()
-    {
-        GameState.Instance.board.SetHover(gameObject);
-    }
+public class Tile : MonoBehaviour {
 
-    void OnMouseExit()
-    {
-        GameState.Instance.board.RemoveHover(gameObject);
+    void OnMouseEnter() {
+        GameState.Instance.board.SetHover(gameObject);
     }
 }
