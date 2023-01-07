@@ -12,7 +12,7 @@ public class Board : MonoBehaviour {
 
     void Start() {
         GameState.Instance.board = this;
-        GenerateBoard();
+        // GenerateBoard();
     }
 
     void Update() {
