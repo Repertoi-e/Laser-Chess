@@ -14,6 +14,10 @@ public class Dreadnought : Piece {
         get => AttackPower;
     }
 
+    override public bool IsEnemy {
+        get => true;
+    }
+
     override public void Move() {
     
     }

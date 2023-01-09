@@ -7,14 +7,11 @@ using UnityEngine;
 public class Board : MonoBehaviour {
     public GameObject tilePrefab;
 
-    public float kGlowDuration = 0.1f;
-    public Color kGlowColor;
-
     private GameObject hoveredTile = null;
     private BoxCollider hoverTriggerCollider; // encapsulates all tiles to detect when the user mouse hasn't selected any tile
 
     void Start() {
-        GameState.Instance.board = this;
+        GameState.board = this;
 
         GameState.Instance.CurrentState = GameState.State.Playing;
         GameState.Instance.WhoIsOnTurn = GameState.OnTurn.Human;

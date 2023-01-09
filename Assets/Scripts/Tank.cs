@@ -14,6 +14,10 @@ public class Tank : Piece {
         get => AttackPower;
     }
 
+    override public bool IsEnemy {
+        get => false;
+    }
+
     override public void Move() {
     
     }

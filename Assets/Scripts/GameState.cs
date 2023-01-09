@@ -1,7 +1,8 @@
 using UnityEngine;
 
 public class GameState : Singleton<GameState> {
-    public Board board;
+    public static Board board;
+    public static Constants constants;
 
     public enum State {
         Menu,
