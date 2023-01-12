@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 
-public class Tank : Piece {
+public class Drone : Piece {
     public int hitPoints;
     public int attackPower;
 
@@ -15,10 +16,13 @@ public class Tank : Piece {
     }
 
     override public bool IsEnemy {
-        get => false;
+        get => true;
     }
 
-    override public void Move() {
-    
+    override public IEnumerable<Vector3> MoveDirectionsByRule {
+        get => new[] {
+            // Moves forward 1 space like a pawn
+            new Vector3(0, 0, -1),
+        };
     }
 }

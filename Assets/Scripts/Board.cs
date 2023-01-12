@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
+using UnityEngineInternal;
 
 public class Board : MonoBehaviour {
     public GameObject tilePrefab;
@@ -10,11 +12,19 @@ public class Board : MonoBehaviour {
     private GameObject hoveredTile = null;
     private BoxCollider hoverTriggerCollider; // encapsulates all tiles to detect when the user mouse hasn't selected any tile
 
+    public Dictionary<Vector3, GameObject> PositionToTile = new();
+
     void Start() {
-        GameState.board = this;
+        GameState.Board = this;
 
         GameState.Instance.CurrentState = GameState.State.Playing;
         GameState.Instance.WhoIsOnTurn = GameState.OnTurn.Human;
+
+        var boardTiles = GameObject.Find("/BoardTiles");
+        for (int i = 0; i < boardTiles.transform.childCount; i++) {
+            var child = boardTiles.transform.GetChild(i);
+            PositionToTile[child.position] = child.gameObject;
+        }
 
         // GenerateBoard();
     }
@@ -40,6 +50,13 @@ public class Board : MonoBehaviour {
             }
         }
     }
+
+    public void ClearBoardHovers() {
+        foreach (var item in PositionToTile) {
+            item.Value.GetComponent<Tile>().GlowForAllowedMove = false;
+        }
+    }
+
     void GenerateBoard() {
         var boardTiles = new GameObject("BoardTiles");
 
@@ -57,6 +74,7 @@ public class Board : MonoBehaviour {
         hoverTriggerCollider.size = new Vector3(8, 1, 8);
         hoverTriggerCollider.center = new Vector3(3.5f, .1f, 3.5f);
     }
+
     public void SetHover(GameObject tile) {
         hoveredTile = tile;
     }

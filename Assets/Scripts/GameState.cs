@@ -1,8 +1,8 @@
 using UnityEngine;
 
 public class GameState : Singleton<GameState> {
-    public static Board board;
-    public static Constants constants;
+    public static Board Board;
+    public static Constants Constants;
 
     public enum State {
         Menu,
@@ -32,6 +32,13 @@ public class GameState : Singleton<GameState> {
 
     public bool IsPlayerOnTurn {
         get => currentState == State.Playing && onTurn == OnTurn.Human;
+    }
+
+    private GameObject activePiece = null;
+
+    public GameObject ActivePiece {
+        get => activePiece;
+        set => activePiece = value;
     }
 
     void Start() {

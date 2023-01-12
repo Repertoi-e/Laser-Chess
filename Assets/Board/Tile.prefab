@@ -376,7 +376,7 @@ GameObject:
   m_Component:
   - component: {fileID: 995583922359477645}
   m_Layer: 0
-  m_Name: EnemyBorder
+  m_Name: Border
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1301,7 +1301,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1407671447120938233}
   m_Layer: 0
-  m_Name: Border
+  m_Name: Bumps
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
