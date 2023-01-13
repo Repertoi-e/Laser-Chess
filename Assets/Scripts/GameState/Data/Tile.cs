@@ -5,23 +5,25 @@ using System.Linq;
 using System.Collections.Generic;
 
 public class Tile : MonoBehaviour {
-    private float elapsedTime = 0;
-
     private Material material;
+    
+    private float elapsedTime = 0;
     private Color targetColor;
 
-    private GameObject border;
+    private GameObject enemyBorder;
+
+    public bool IsGlowingToSignifyAvailableMovePosition = false; // this property controlled by the GameState
 
     void Start() {
         material = GetComponent<Renderer>().material;
 
-        border = gameObject.transform.Find("Border").gameObject;
-        border.SetActive(false);
+        enemyBorder = gameObject.transform.Find("Border").gameObject;
+        enemyBorder.SetActive(false);
     }
 
     void Update() {
-        if (elapsedTime < GameState.Constants.kGlowAnimationDuration) {
-            float t = elapsedTime / GameState.Constants.kGlowAnimationDuration;
+        if (elapsedTime < GameState.It.Constants.kGlowAnimationDuration) {
+            float t = elapsedTime / GameState.It.Constants.kGlowAnimationDuration;
             t = t * t * (3f - 2f * t);
 
             material.SetColor("_EmissionColor", Color.Lerp(material.GetColor("_EmissionColor"), targetColor, t));
@@ -30,19 +32,17 @@ public class Tile : MonoBehaviour {
             material.SetColor("_EmissionColor", targetColor);
         }
 
+        // @Speed: Perhaphs we can call this less frequently?
         bool shouldEnemyBorderBeActive = CheckForEnemyAbove();
-        if (border.activeSelf != shouldEnemyBorderBeActive)
-            border.SetActive(shouldEnemyBorderBeActive);
+        if (enemyBorder.activeSelf != shouldEnemyBorderBeActive)
+            enemyBorder.SetActive(shouldEnemyBorderBeActive);
     }
 
-    public bool GlowForAllowedMove {
-        set {
-            if (value && !GameState.Instance.IsPlayerOnTurn)
-                return;
-
-            elapsedTime = 0;
-            targetColor = value ? Color.white : Color.black;
-        }
+    // Changes the emission color of the tile,
+    // pass c as Color.black to disable the effect.
+    public void SetTargetEmissionColor(Color c) {
+        elapsedTime = 0;
+        targetColor = c;
     }
 
     public GameObject GetPieceAbove() {
@@ -64,19 +64,10 @@ public class Tile : MonoBehaviour {
     }
 
     void OnMouseEnter() {
-        bool isAttacking = false; // XXXX TODO:
-        if (!GameState.Instance.IsPlayerOnTurn || GameState.Instance.ActivePiece == null || !isAttacking)
-            return;
-
-        elapsedTime = 0;
-        targetColor = GameState.Constants.kGlowHoverAttackColor;
+        GameState.It.OnTileMouseEnter(this);
     }
 
     void OnMouseExit() {
-        if (GameState.Instance.ActivePiece != null)
-            return;
-
-        elapsedTime = 0;
-        targetColor = Color.black;
+        GameState.It.OnTileMouseExit(this);
     }
 }

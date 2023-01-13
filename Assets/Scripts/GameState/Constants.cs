@@ -10,12 +10,4 @@ public class Constants : MonoBehaviour {
     public Color kGlowHuman;
 
     public Color kGlowHoverAttackColor;
-
-    void Start() {
-        GameState.Constants = this;
-    }
-
-    void Update() {
-
-    }
 }
