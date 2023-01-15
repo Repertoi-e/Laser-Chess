@@ -61,12 +61,4 @@ public class Tile : MonoBehaviour {
         var piece = GetPieceAbove();
         return piece ? piece.IsEnemy : false;
     }
-
-    void OnMouseEnter() {
-        GameState.It.OnTileMouseEnter(this);
-    }
-
-    void OnMouseExit() {
-        GameState.It.OnTileMouseExit(this);
-    }
 }

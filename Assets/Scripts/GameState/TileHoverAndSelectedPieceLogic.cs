@@ -26,7 +26,7 @@ public partial class GameState {
         }
     }
 
-    public void OnTileMouseEnter(Tile tile) {
+    void OnTileMouseEnter(Tile tile) {
         if (tile.IsGlowingToSignifyAvailableMovePosition) {
             // move ghost to available move tile
             OnGhostHover(tile);
@@ -51,19 +51,29 @@ public partial class GameState {
         tile.SetTargetEmissionColor(Color.black);
     }
 
-    public void OnTileMouseExit(Tile tile) {
+    void OnTileMouseExit(Tile tile) {
         OnTileLostHover(tile);
+    }
+
+    void OnTileClicked(Tile tile) {
+        if (selectedPiece) {
+            selectedPiece.transform.position = tile.transform.position;
+            selectedPiece.HasMovedThisTurn = true;
+            selectedPiece = null;
+            OnGhostLostHover();
+            ClearTilesGlowingToSignifyAvailableMovePosition();
+        }
     }
 
     bool mouseOnBoard = false;
 
-    public void OnBoardMouseEnter() {
+    void OnBoardMouseEnter() {
         if (mouseOnBoard)
             return;
         mouseOnBoard = true;
     }
 
-    public void OnBoardMouseExit() {
+    void OnBoardMouseExit() {
         if (!mouseOnBoard)
             return;
 
@@ -79,11 +89,7 @@ public partial class GameState {
         mouseOnBoard = false;
     }
 
-    public void OnPieceClicked(Piece piece) {
-        if (!IsPlayerOnTurn || piece.IsEnemy)
-            return;
-
-        // Clear all tiles glowing
+    void ClearTilesGlowingToSignifyAvailableMovePosition() {
         foreach (var item in Board.PositionToTile) {
             var tile = item.Value.GetComponent<Tile>();
             if (tile.IsGlowingToSignifyAvailableMovePosition) {
@@ -91,6 +97,13 @@ public partial class GameState {
                 tile.SetTargetEmissionColor(Color.black);
             }
         }
+    }
+
+    void OnPieceClicked(Piece piece) {
+        if (!IsPlayerOnTurn || piece.IsEnemy || piece.HasMovedThisTurn)
+            return;
+
+        ClearTilesGlowingToSignifyAvailableMovePosition();
         if (selectedPieceGhostModel) {
             Destroy(selectedPieceGhostModel);
         }

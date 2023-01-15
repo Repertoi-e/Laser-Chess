@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18241322, g: 0.228124, b: 0.30728036, a: 1}
+  m_IndirectSpecularColor: {r: 0.18241331, g: 0.22812405, b: 0.3072805, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -547,11 +547,11 @@ RectTransform:
   m_Father: {fileID: 1300601358}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.5}
-  m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 1720, y: -303}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -50, y: 120}
   m_SizeDelta: {x: 300, y: 50}
-  m_Pivot: {x: 0.5, y: 1}
+  m_Pivot: {x: 1, y: 0}
 --- !u!114 &77908935
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2976,7 +2976,7 @@ GameObject:
   - component: {fileID: 540426678}
   - component: {fileID: 540426677}
   m_Layer: 0
-  m_Name: WorldUI Camera
+  m_Name: UI Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3013,7 +3013,7 @@ Camera:
   m_Depth: 10
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 96
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -3108,7 +3108,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 55
+    m_Bits: 23
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -3534,13 +3534,13 @@ GameObject:
   - component: {fileID: 644918484}
   - component: {fileID: 644918483}
   - component: {fileID: 644918482}
-  m_Layer: 6
+  m_Layer: 5
   m_Name: UI World
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &644918482
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3554,10 +3554,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_IgnoreReversedGraphics: 0
-  m_BlockingObjects: 3
+  m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 2147483647
+    m_Bits: 0
 --- !u!114 &644918483
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5158,7 +5158,7 @@ GameObject:
   - component: {fileID: 818718608}
   - component: {fileID: 818718607}
   - component: {fileID: 818718606}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Plane (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5242,7 +5242,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &822598324
 PrefabInstance:
@@ -5925,7 +5925,8 @@ GameObject:
   - component: {fileID: 936889737}
   - component: {fileID: 936889736}
   - component: {fileID: 936889735}
-  m_Layer: 6
+  - component: {fileID: 936889738}
+  m_Layer: 5
   m_Name: Attack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5975,7 +5976,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_HighlightedColor: {r: 0.8396226, g: 0.8396226, b: 0.8396226, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
@@ -6035,6 +6036,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 936889733}
   m_CullTransparentMesh: 1
+--- !u!65 &936889738
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 936889733}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 95, y: 23, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &958444446
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8080,7 +8094,7 @@ GameObject:
   - component: {fileID: 1236817851}
   - component: {fileID: 1236817853}
   - component: {fileID: 1236817852}
-  m_Layer: 6
+  m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8465,7 +8479,7 @@ RectTransform:
   - {fileID: 77908934}
   - {fileID: 1236663080}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -9175,6 +9189,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9060cabdb7f68e41a0abf1021541d90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  raycastLayerMask:
+    serializedVersion: 2
+    m_Bits: 51
   Board: {fileID: 1527730699}
   Constants: {fileID: 106546358}
   pieceTransparentMaterial: {fileID: 2100000, guid: e1e9482e03bab3f438f759a9869e11ff, type: 2}
@@ -9516,7 +9533,7 @@ GameObject:
   - component: {fileID: 1527730700}
   - component: {fileID: 1527730699}
   - component: {fileID: 1527730701}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: Board
   m_TagString: Board
   m_Icon: {fileID: 0}
@@ -9586,7 +9603,7 @@ GameObject:
   - component: {fileID: 1575729914}
   - component: {fileID: 1575729913}
   - component: {fileID: 1575729912}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9670,7 +9687,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1602899240 stripped
 Transform:

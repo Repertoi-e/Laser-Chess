@@ -1,10 +1,5 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UIElements;
-using UnityEngineInternal;
 
 public class Board : MonoBehaviour {
     public GameObject tilePrefab;
@@ -23,21 +18,6 @@ public class Board : MonoBehaviour {
         for (int i = 0; i < boardTiles.transform.childCount; i++) {
             var child = boardTiles.transform.GetChild(i);
             PositionToTile[child.position] = child.gameObject;
-        }
-    }
-
-    void Update() {
-        // check for mouse exit
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 100f, ~0, QueryTriggerInteraction.Collide)) {
-            if (hit.collider.CompareTag("Board")) {
-                GameState.It.OnBoardMouseEnter();
-            } else {
-                GameState.It.OnBoardMouseExit();
-            }
-        } else {
-            GameState.It.OnBoardMouseExit();
         }
     }
 

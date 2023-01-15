@@ -10,7 +10,7 @@ public partial class GameState {
         piece.SetTargetEmissionColor(piece.IsEnemy ? Constants.kGlowEnemy : Constants.kGlowHuman);
     }
 
-    public void OnPieceMouseLeft(Piece piece) {
+    public void OnPieceMouseExit(Piece piece) {
         piece.SetTargetEmissionColor(Color.black);
     }
 }

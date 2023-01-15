@@ -59,20 +59,8 @@ public abstract class Piece : MonoBehaviour {
         }
     }
 
-    void OnMouseDown() {
-        GameState.It.OnPieceClicked(this);
-    }
-
     public void SetTargetEmissionColor(Color c) {
         elapsedTime = 0;
         targetColor = c;
-    }
-
-    void OnMouseEnter() {
-        GameState.It.OnPieceMouseEnter(this);
-    }
-
-    void OnMouseExit() {
-        GameState.It.OnPieceMouseLeft(this);
     }
 }

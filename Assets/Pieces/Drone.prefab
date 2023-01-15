@@ -59,6 +59,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 616bed2810bbcdf44865bd88f8295cac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HasMovedThisTurn: 0
+  HasAttackedThisTurn: 0
   hitPoints: 2
   attackPower: 1
 --- !u!1001 &6669072586617367522
@@ -128,6 +130,18 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -7601226680800833775, guid: d2b28425873456246bca4dc0eeed5a8e, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e7bd247ebd0bb5f4299cb3187f898f79, type: 2}
+    - target: {fileID: -6877481245417288963, guid: d2b28425873456246bca4dc0eeed5a8e, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e7bd247ebd0bb5f4299cb3187f898f79, type: 2}
+    - target: {fileID: -6034480803058315714, guid: d2b28425873456246bca4dc0eeed5a8e, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e7bd247ebd0bb5f4299cb3187f898f79, type: 2}
     - target: {fileID: -4683669308469848369, guid: d2b28425873456246bca4dc0eeed5a8e, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -136,6 +150,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Model
       objectReference: {fileID: 0}
+    - target: {fileID: 1541998606474349963, guid: d2b28425873456246bca4dc0eeed5a8e, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e7bd247ebd0bb5f4299cb3187f898f79, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d2b28425873456246bca4dc0eeed5a8e, type: 3}
 --- !u!4 &6559483320628071433 stripped
