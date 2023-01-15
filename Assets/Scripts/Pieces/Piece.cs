@@ -21,10 +21,25 @@ public abstract class Piece : MonoBehaviour {
         get;
     }
 
+    public bool HasMovedThisTurn; // managed by GameState
+    public bool HasAttackedThisTurn; // managed by GameState
+
     private float elapsedTime = 0;
 
     private List<Material> materials;
     private Color targetColor;
+
+    public Tile GetTileBelow() {
+        Ray ray = new Ray(transform.position, Vector3.down);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, 2)) {
+            if (hit.collider != null) {
+                var tile = hit.collider.gameObject.GetComponent<Tile>();
+                return tile;
+            }
+        }
+        return null;
+    }
 
     void Start() {
         materials = (from c in GetComponentsInChildren<Renderer>() select c.material).ToList();

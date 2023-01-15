@@ -45,14 +45,13 @@ public class Tile : MonoBehaviour {
         targetColor = c;
     }
 
-    public GameObject GetPieceAbove() {
+    public Piece GetPieceAbove() {
         Ray ray = new Ray(transform.position, Vector3.up);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, 2)) {
             if (hit.collider != null) {
                 var piece = hit.collider.gameObject.GetComponent<Piece>();
-                if (piece != null)
-                    return hit.collider.gameObject;
+                return piece;
             }
         }
         return null;
@@ -60,7 +59,7 @@ public class Tile : MonoBehaviour {
 
     public bool CheckForEnemyAbove() {
         var piece = GetPieceAbove();
-        return piece ? piece.GetComponent<Piece>().IsEnemy : false;
+        return piece ? piece.IsEnemy : false;
     }
 
     void OnMouseEnter() {

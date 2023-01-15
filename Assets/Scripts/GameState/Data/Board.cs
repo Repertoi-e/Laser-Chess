@@ -26,6 +26,21 @@ public class Board : MonoBehaviour {
         }
     }
 
+    void Update() {
+        // check for mouse exit
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, 100f, ~0, QueryTriggerInteraction.Collide)) {
+            if (hit.collider.CompareTag("Board")) {
+                GameState.It.OnBoardMouseEnter();
+            } else {
+                GameState.It.OnBoardMouseExit();
+            }
+        } else {
+            GameState.It.OnBoardMouseExit();
+        }
+    }
+
     void GenerateBoard() {
         var boardTiles = new GameObject("BoardTiles");
 

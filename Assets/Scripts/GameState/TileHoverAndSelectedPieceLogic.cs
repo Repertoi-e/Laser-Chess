@@ -4,6 +4,8 @@ using UnityEditor;
 using UnityEngine;
 
 public partial class GameState {
+    public Material pieceTransparentMaterial;
+    
     private Piece selectedPiece = null;
 
     IEnumerable<Vector3> GetAllowedMovePositionsForPiece(Piece piece) {
@@ -27,18 +29,12 @@ public partial class GameState {
     public void OnTileMouseEnter(Tile tile) {
         if (tile.IsGlowingToSignifyAvailableMovePosition) {
             // move ghost to available move tile
-            Debug.Assert(selectedPiece);
-            if (selectedPiece) {
-                EnsureGhostForPiece(selectedPiece);
-                selectedPieceGhostModel.transform.position = tile.gameObject.transform.position;
-            }
+            OnGhostHover(tile);
             return;
         } else {
-            if (selectedPieceGhostModel) {
-                // if hovering non-allowed move tile,
-                // move the ghost out the way 
-                selectedPieceGhostModel.transform.position = new Vector3(0, 0, -1000);
-            }
+            // if hovering non-allowed move tile,
+            // move the ghost out the way 
+            OnGhostLostHover();
         }
 
         bool isAttacking = false; // @TODO XXX
@@ -48,11 +44,39 @@ public partial class GameState {
         tile.SetTargetEmissionColor(Constants.kGlowHoverAttackColor);
     }
 
-    public void OnTileMouseExit(Tile tile) {
+    void OnTileLostHover(Tile tile) {
         if (tile.IsGlowingToSignifyAvailableMovePosition)
             return;
 
         tile.SetTargetEmissionColor(Color.black);
+    }
+
+    public void OnTileMouseExit(Tile tile) {
+        OnTileLostHover(tile);
+    }
+
+    bool mouseOnBoard = false;
+
+    public void OnBoardMouseEnter() {
+        if (mouseOnBoard)
+            return;
+        mouseOnBoard = true;
+    }
+
+    public void OnBoardMouseExit() {
+        if (!mouseOnBoard)
+            return;
+
+        foreach (var item in Board.PositionToTile) {
+            var tile = item.Value.GetComponent<Tile>();
+            OnTileLostHover(tile);
+        }
+
+        // if no longer hovering board,
+        // move the ghost out the way 
+        OnGhostLostHover();
+
+        mouseOnBoard = false;
     }
 
     public void OnPieceClicked(Piece piece) {
@@ -102,6 +126,27 @@ public partial class GameState {
 
             var modelCopy = Instantiate(model.gameObject);
             modelCopy.transform.parent = selectedPieceGhostModel.transform;
+
+            var renderers = modelCopy.GetComponentsInChildren<Renderer>();
+            foreach (var renderer in renderers) {
+                renderer.material = pieceTransparentMaterial;
+            }
+        }
+    }
+
+    void OnGhostHover(Tile tile) {
+        Debug.Assert(selectedPiece);
+        if (selectedPiece) {
+            EnsureGhostForPiece(selectedPiece);
+            selectedPieceGhostModel.transform.position = tile.gameObject.transform.position;
+        }
+    }
+
+
+    // Get out of the way
+    void OnGhostLostHover() {
+        if (selectedPieceGhostModel) {
+            selectedPieceGhostModel.transform.position = new Vector3(0, 0, -1000);
         }
     }
 }
