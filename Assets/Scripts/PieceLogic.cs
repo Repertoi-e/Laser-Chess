@@ -69,7 +69,7 @@ public partial class GameState {
             return;
 
         if (selectedPiece) {
-            transactionsForThisFrame.Enqueue(new MoveTransaction() { piece = selectedPiece, target = tile.transform.position });
+            QueueUpTransaction(new MoveTransaction() { piece = selectedPiece, target = tile.transform.position });
             selectedPiece = null;
 
             // @Coupling Relying on code in TileLogic

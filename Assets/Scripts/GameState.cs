@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -54,7 +55,13 @@ public sealed partial class GameState : MonoBehaviour {
         WhoIsOnTurn = OnTurn.Human;
     }
 
-    public Queue<Transaction> transactionsForThisFrame = new();
+    Queue<IEnumerator> transactionsForThisFrame = new();
+
+    void QueueUpTransaction(Transaction t) {
+        if (!t.IsValid())
+            return;
+        transactionsForThisFrame.Enqueue(t.Execute());
+    }
 
     // The bool says whether it's clicked or not
     Dictionary<GameObject, bool> previousFrameHovers = new();
@@ -89,6 +96,13 @@ public sealed partial class GameState : MonoBehaviour {
     }
 
     void Update() {
+        if (transactionsForThisFrame.Count > 0) {
+            if (!transactionsForThisFrame.Peek().MoveNext()) {
+                transactionsForThisFrame.Dequeue();
+            }
+            return; // don't do any logic while transactions are occuring
+        }
+
         bool mousePressed = Input.GetMouseButton(0);
 
         bool rayHitPieceThisFrame = false;
@@ -147,12 +161,5 @@ public sealed partial class GameState : MonoBehaviour {
 
         previousFrameHovers = new(frameHovers);
         frameHovers.Clear();
-
-        foreach (var transaction in transactionsForThisFrame) {
-            if (transaction.IsValid()) {
-                transaction.Execute();
-            }
-        }
-        transactionsForThisFrame.Clear();
     }
 }

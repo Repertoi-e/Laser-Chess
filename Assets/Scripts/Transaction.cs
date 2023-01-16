@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 // We are handling things with transactions, because a real game
@@ -9,8 +10,8 @@ using UnityEngine;
 // the game loop. The bad alternative would be if every part of the game could execute
 // potentially arbitrary many actions, so everything becomes coupled and spaghetti-like.
 public abstract class Transaction {
-    public abstract void Execute();
     public abstract bool IsValid();
+    public abstract IEnumerator Execute();
 
 }
 
@@ -34,7 +35,12 @@ public class MoveTransaction : Transaction {
         return true;
     }
 
-    public override void Execute() {
+    public override IEnumerator Execute() {
+        float timePassed = 0;
+        while (timePassed < 0.5f) {
+            timePassed += Time.deltaTime;
+            yield return null;
+        }
         piece.gameObject.transform.position = target;
         piece.HasMovedThisTurn = true;
     }
