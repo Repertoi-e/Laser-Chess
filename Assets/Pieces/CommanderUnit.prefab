@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 374768419100584737}
   - component: {fileID: 374768419100584742}
   - component: {fileID: 5183334341310556734}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CommanderUnit
   m_TagString: Piece
   m_Icon: {fileID: 0}
@@ -45,7 +45,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 0.8, y: 0.8, z: 0.8}
   m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &5183334341310556734
 MonoBehaviour:
@@ -59,6 +59,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3a7f11df37eb6f4099251fc1cc37411, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HasMovedThisTurn: 0
+  HasAttackedThisTurn: 0
   hitPoints: 5
   attackPower: 0
 --- !u!1001 &374768420075195224
@@ -128,6 +130,14 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -8391222552659086748, guid: afd87fea41b363d4f97dad4cca16fad7, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -6197551877168076425, guid: afd87fea41b363d4f97dad4cca16fad7, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: -4683669308469848369, guid: afd87fea41b363d4f97dad4cca16fad7, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -139,6 +149,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: afd87fea41b363d4f97dad4cca16fad7, type: 3}
       propertyPath: m_Name
       value: Model
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: afd87fea41b363d4f97dad4cca16fad7, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: afd87fea41b363d4f97dad4cca16fad7, type: 3}

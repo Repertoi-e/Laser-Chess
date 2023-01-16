@@ -6,26 +6,6 @@ using UnityEngine;
 public partial class GameState {
     public Material pieceTransparentMaterial;
     
-    private Piece selectedPiece = null;
-
-    IEnumerable<Vector3> GetAllowedMovePositionsForPiece(Piece piece) {
-        foreach (var rel in piece.MoveDirectionsByRule) {
-            if (rel.x == 0 && rel.z == 0)
-                continue;
-
-            var dest = rel + piece.transform.position;
-
-            GameObject tile;
-            Board.PositionToTile.TryGetValue(dest, out tile);
-            if (tile != null) {
-                var tileComp = tile.GetComponent<Tile>();
-                if (tileComp && tileComp.GetPieceAbove() == null) {
-                    yield return dest;
-                }
-            }
-        }
-    }
-
     void OnTileMouseEnter(Tile tile) {
         if (tile.IsGlowingToSignifyAvailableMovePosition) {
             // move ghost to available move tile
@@ -55,16 +35,6 @@ public partial class GameState {
         OnTileLostHover(tile);
     }
 
-    void OnTileClicked(Tile tile) {
-        if (selectedPiece) {
-            selectedPiece.transform.position = tile.transform.position;
-            selectedPiece.HasMovedThisTurn = true;
-            selectedPiece = null;
-            OnGhostLostHover();
-            ClearTilesGlowingToSignifyAvailableMovePosition();
-        }
-    }
-
     bool mouseOnBoard = false;
 
     void OnBoardMouseEnter() {
@@ -87,39 +57,6 @@ public partial class GameState {
         OnGhostLostHover();
 
         mouseOnBoard = false;
-    }
-
-    void ClearTilesGlowingToSignifyAvailableMovePosition() {
-        foreach (var item in Board.PositionToTile) {
-            var tile = item.Value.GetComponent<Tile>();
-            if (tile.IsGlowingToSignifyAvailableMovePosition) {
-                tile.IsGlowingToSignifyAvailableMovePosition = false;
-                tile.SetTargetEmissionColor(Color.black);
-            }
-        }
-    }
-
-    void OnPieceClicked(Piece piece) {
-        if (!IsPlayerOnTurn || piece.IsEnemy || piece.HasMovedThisTurn)
-            return;
-
-        ClearTilesGlowingToSignifyAvailableMovePosition();
-        if (selectedPieceGhostModel) {
-            Destroy(selectedPieceGhostModel);
-        }
-
-        // Toggle selection when clicking multiple times
-        if (selectedPiece == piece) {
-            selectedPiece = null;
-        } else {
-            selectedPiece = piece;
-            foreach (var tileDest in GetAllowedMovePositionsForPiece(piece)) {
-                var tile = Board.PositionToTile[tileDest].GetComponent<Tile>();
-                // washed-out white
-                tile.SetTargetEmissionColor(new Color(0.35f, 0.35f, 0.35f, 0.35f));
-                tile.IsGlowingToSignifyAvailableMovePosition = true;
-            }
-        }
     }
 
     // This object is a copy of the ActivePiece's model.
@@ -148,13 +85,13 @@ public partial class GameState {
     }
 
     void OnGhostHover(Tile tile) {
+        // @Coupling Relying on code in PieceLogic
         Debug.Assert(selectedPiece);
         if (selectedPiece) {
             EnsureGhostForPiece(selectedPiece);
             selectedPieceGhostModel.transform.position = tile.gameObject.transform.position;
         }
     }
-
 
     // Get out of the way
     void OnGhostLostHover() {

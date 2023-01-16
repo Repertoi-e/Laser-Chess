@@ -54,6 +54,8 @@ public sealed partial class GameState : MonoBehaviour {
         WhoIsOnTurn = OnTurn.Human;
     }
 
+    public Queue<Transaction> transactionsForThisFrame = new();
+
     // The bool says whether it's clicked or not
     Dictionary<GameObject, bool> previousFrameHovers = new();
     Dictionary<GameObject, bool> frameHovers = new();
@@ -86,20 +88,31 @@ public sealed partial class GameState : MonoBehaviour {
         }
     }
 
-
     void Update() {
         bool mousePressed = Input.GetMouseButton(0);
+
+        bool rayHitPieceThisFrame = false;
+        bool rayHitTileThisFrame = false;
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit[] hits = Physics.RaycastAll(ray, 100, raycastLayerMask, QueryTriggerInteraction.Collide);
         foreach (RaycastHit hit in hits) {
             var obj = hit.collider.gameObject;
-            frameHovers.Add(obj, mousePressed);
 
             if (obj.layer == LayerMask.NameToLayer("UI")) {
                 frameHovers.Clear();
                 break; // Bail. Act as if nothing is pressed/hovered this frame, i.e. everything is released and unhovered.
+            } else if (obj.CompareTag("Piece")) {
+                if (rayHitPieceThisFrame) // here we make sure we stop at the first piece hit so no multiple pieces are ever registered
+                    continue;
+                rayHitPieceThisFrame = true;
+            } else if (obj.GetComponent<Tile>()) {
+                if (rayHitPieceThisFrame || rayHitTileThisFrame) // .. also for tiles + avoid hitting a tile if a piece is hit
+                    continue;
+                rayHitTileThisFrame = true;
             }
+
+            frameHovers.Add(obj, mousePressed);
         }
 
         foreach (var entry in previousFrameHovers) {
@@ -134,5 +147,12 @@ public sealed partial class GameState : MonoBehaviour {
 
         previousFrameHovers = new(frameHovers);
         frameHovers.Clear();
+
+        foreach (var transaction in transactionsForThisFrame) {
+            if (transaction.IsValid()) {
+                transaction.Execute();
+            }
+        }
+        transactionsForThisFrame.Clear();
     }
 }

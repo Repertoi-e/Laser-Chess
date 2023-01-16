@@ -48,7 +48,7 @@ public class Tile : MonoBehaviour {
     public Piece GetPieceAbove() {
         Ray ray = new Ray(transform.position, Vector3.up);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 2)) {
+        if (Physics.Raycast(ray, out hit, 3)) {
             if (hit.collider != null) {
                 var piece = hit.collider.gameObject.GetComponent<Piece>();
                 return piece;

@@ -21,8 +21,8 @@ public abstract class Piece : MonoBehaviour {
         get;
     }
 
-    public bool HasMovedThisTurn; // managed by GameState
-    public bool HasAttackedThisTurn; // managed by GameState
+    public bool HasMovedThisTurn = false; // managed by GameState
+    public bool HasAttackedThisTurn = false; // managed by GameState
 
     private float elapsedTime = 0;
 

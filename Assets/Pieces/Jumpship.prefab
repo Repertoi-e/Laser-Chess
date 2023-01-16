@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3406276138076159153}
   - component: {fileID: 63001006756992645}
   - component: {fileID: 4720458786555007165}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Jumpship
   m_TagString: Piece
   m_Icon: {fileID: 0}
@@ -45,7 +45,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 0.8, y: 0.8, z: 0.8}
   m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &4720458786555007165
 MonoBehaviour:
@@ -59,6 +59,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30df453d3a889ec4894b4e032d6c697c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HasMovedThisTurn: 0
+  HasAttackedThisTurn: 0
   hitPoints: 2
   attackPower: 2
 --- !u!1001 &6639404052419702366
@@ -128,13 +130,37 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -8391222552659086748, guid: 7cec692b01997b14881f262dbe44c3ad, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -6197551877168076425, guid: 7cec692b01997b14881f262dbe44c3ad, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -5568371526223589888, guid: 7cec692b01997b14881f262dbe44c3ad, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: -4683669308469848369, guid: 7cec692b01997b14881f262dbe44c3ad, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: e7bd247ebd0bb5f4299cb3187f898f79, type: 2}
+    - target: {fileID: -516098083770646512, guid: 7cec692b01997b14881f262dbe44c3ad, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 7cec692b01997b14881f262dbe44c3ad, type: 3}
       propertyPath: m_Name
       value: Model
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 7cec692b01997b14881f262dbe44c3ad, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8513859187771203891, guid: 7cec692b01997b14881f262dbe44c3ad, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7cec692b01997b14881f262dbe44c3ad, type: 3}

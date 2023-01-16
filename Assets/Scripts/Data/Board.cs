@@ -4,7 +4,7 @@ using UnityEngine;
 public class Board : MonoBehaviour {
     public GameObject tilePrefab;
 
-    public Dictionary<Vector3, GameObject> PositionToTile = new();
+    public Dictionary<Vector3, Tile> PositionToTile = new();
 
     void Start() {
         // We don't call 
@@ -17,7 +17,7 @@ public class Board : MonoBehaviour {
         var boardTiles = GameObject.Find("/BoardTiles");
         for (int i = 0; i < boardTiles.transform.childCount; i++) {
             var child = boardTiles.transform.GetChild(i);
-            PositionToTile[child.position] = child.gameObject;
+            PositionToTile[child.position] = child.gameObject.GetComponent<Tile>();
         }
     }
 
@@ -30,6 +30,15 @@ public class Board : MonoBehaviour {
                 Vector3 pos = new Vector3(x, 0, y);
                 GameObject tile = Instantiate(tilePrefab, pos, Quaternion.identity);
                 tile.transform.parent = boardTiles.transform;
+            }
+        }
+    }
+
+    public void ClearTilesGlowingToSignifyAvailableMovePosition() {
+        foreach (var item in PositionToTile) {
+            if (item.Value.IsGlowingToSignifyAvailableMovePosition) {
+                item.Value.IsGlowingToSignifyAvailableMovePosition = false;
+                item.Value.SetTargetEmissionColor(Color.black);
             }
         }
     }
