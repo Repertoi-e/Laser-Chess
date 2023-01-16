@@ -18,8 +18,6 @@ public partial class GameState {
             OnGhostLostHover();
         }
 
-        tile.SetTargetEmissionColor(Constants.kGlowHoverAttackColor);
-        
         bool isAttacking = false; // @TODO XXX
         if (!IsPlayerOnTurn || !isAttacking)
             return;

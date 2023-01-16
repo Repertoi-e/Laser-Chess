@@ -1,9 +1,25 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public partial class GameState {
     private Piece selectedPiece = null;
+
+    bool IsMoveBlocked(Vector3 start, Vector3 end) {
+        int xIncrement = (start.x == end.x) ? 0 : (start.x < end.x) ? 1 : -1;
+        int zIncrement = (start.z == end.z) ? 0 : (start.z < end.z) ? 1 : -1;
+
+        for (int i = 1; i < Math.Max(Math.Abs(start.x - end.x), Math.Abs(start.z - end.z)); i++) {
+            var dest = new Vector3(start.x + i * xIncrement, 0, start.z + i * zIncrement);
+            Tile tile;
+            Board.PositionToTile.TryGetValue(dest, out tile);
+            if (tile == null || tile.GetPieceAbove() != null) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     IEnumerable<Vector3> GetAllowedMovePositionsForPiece(Piece piece) {
         foreach (var rel in piece.MoveDirectionsByRule) {
@@ -15,7 +31,9 @@ public partial class GameState {
             Tile tile;
             Board.PositionToTile.TryGetValue(dest, out tile);
             if (tile != null && tile.GetPieceAbove() == null) {
-                yield return dest;
+                if (piece.CanIgnorePieceBlock || !IsMoveBlocked(piece.gameObject.transform.position, dest)) {
+                    yield return dest;
+                }
             }
         }
     }

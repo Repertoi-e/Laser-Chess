@@ -21,6 +21,10 @@ public abstract class Piece : MonoBehaviour {
         get;
     }
 
+    public virtual bool CanIgnorePieceBlock {
+        get => false;
+    } // only true for knight-like Jumpship for now
+
     public bool HasMovedThisTurn = false; // managed by GameState
     public bool IsMoving = false; // only used to disable tile glow, sigh
     public bool HasAttackedThisTurn = false; // managed by GameState

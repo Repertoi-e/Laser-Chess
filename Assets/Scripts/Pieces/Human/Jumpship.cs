@@ -28,6 +28,10 @@ public class Jumpship : Piece {
             new Vector3(-1, 0, 2),
             new Vector3(1, 0, -2),
             new Vector3(1, 0, 2)
-        }; 
+        };
+    }
+
+    public override bool CanIgnorePieceBlock {
+        get => true;
     }
 }
