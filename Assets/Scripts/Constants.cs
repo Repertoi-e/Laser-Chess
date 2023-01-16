@@ -10,4 +10,6 @@ public class Constants : MonoBehaviour {
     public Color kGlowHuman;
 
     public Color kGlowHoverAttackColor;
+
+    public Color kGlowAvailableAction;
 }

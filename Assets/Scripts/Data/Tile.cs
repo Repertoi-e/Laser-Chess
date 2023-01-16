@@ -33,7 +33,21 @@ public class Tile : MonoBehaviour {
         }
 
         // @Speed: Perhaphs we can call this less frequently?
-        bool shouldEnemyBorderBeActive = CheckForEnemyAbove();
+
+        bool shouldEnemyBorderBeActive = false;
+
+        var pieceAbove = GetPieceAbove();
+        if (pieceAbove) {
+            if (pieceAbove.IsEnemy) {
+                shouldEnemyBorderBeActive = true;
+            } else {
+                if (!pieceAbove.HasAttackedThisTurn || !pieceAbove.HasMovedThisTurn) {
+                    // Override to green cause tile has friendly unit that is ready for action
+                    material.SetColor("_EmissionColor", GameState.It.Constants.kGlowAvailableAction);
+                }
+            }
+        }
+
         if (enemyBorder.activeSelf != shouldEnemyBorderBeActive)
             enemyBorder.SetActive(shouldEnemyBorderBeActive);
     }

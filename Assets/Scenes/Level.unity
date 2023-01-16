@@ -948,6 +948,7 @@ MonoBehaviour:
   kGlowEnemy: {r: 1, g: 0.3019608, b: 0.3019608, a: 1}
   kGlowHuman: {r: 0.19607843, g: 1, b: 0.49411765, a: 1}
   kGlowHoverAttackColor: {r: 1, g: 0.3019608, b: 0.3019608, a: 1}
+  kGlowAvailableAction: {r: 0.19607843, g: 1, b: 0.49411765, a: 0}
 --- !u!4 &106546359
 Transform:
   m_ObjectHideFlags: 0
