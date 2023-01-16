@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 
 public sealed partial class GameState : MonoBehaviour {
@@ -32,7 +33,11 @@ public sealed partial class GameState : MonoBehaviour {
 
     public State CurrentState {
         get => currentState;
-        set => currentState = value;
+        set {
+            if (value != State.Playing)
+                CurrentPieceInteraction = null;
+            currentState = value;
+        }
     }
 
     public enum OnTurn {
@@ -44,7 +49,11 @@ public sealed partial class GameState : MonoBehaviour {
 
     public OnTurn WhoIsOnTurn {
         get => onTurn;
-        set => onTurn = value;
+        set {
+            if (value != OnTurn.Human)
+                CurrentPieceInteraction = null;
+            onTurn = value;
+        }
     }
 
     public bool IsPlayerOnTurn {
@@ -58,33 +67,75 @@ public sealed partial class GameState : MonoBehaviour {
 
     Queue<IEnumerator> transactionsForThisFrame = new();
 
-    void QueueUpTransaction(Transaction t) {
+    public void QueueUpTransaction(Transaction t) {
         if (!t.IsValid())
             return;
         transactionsForThisFrame.Enqueue(t.Execute());
+    }
+
+    private PieceInteraction currentPieceInteraction;
+
+    // Right now anyone anywhere can modify this but is this a good idea?
+    // This should only be potentially non-null if it's the player's turn
+    // and the game state is "Playing".
+    public PieceInteraction CurrentPieceInteraction {
+        get => currentPieceInteraction;
+        set {
+            currentPieceInteraction?.End();
+            currentPieceInteraction = value;
+        }
     }
 
     // The bool says whether it's clicked or not
     Dictionary<GameObject, bool> previousFrameHovers = new();
     Dictionary<GameObject, bool> frameHovers = new();
 
+    public void OnPieceMouseEnter(Piece piece) {
+        if (It.CurrentState != State.Playing)
+            return;
+
+        piece.SetTargetEmissionColor(piece.IsEnemy ? Constants.kGlowEnemy : Constants.kGlowHuman);
+
+        CurrentPieceInteraction?.OnPieceMouseEnter(piece);
+    }
+
+    public void OnPieceMouseExit(Piece piece) {
+        piece.SetTargetEmissionColor(Color.black);
+        CurrentPieceInteraction?.OnPieceMouseExit(piece);
+    }
+
     void OnGameObjectMouseEnter(GameObject obj) {
         if (obj.CompareTag("Board")) {
-            OnBoardMouseEnter();
+            CurrentPieceInteraction?.OnBoardMouseEnter();
         } else if (obj.CompareTag("Piece")) {
             OnPieceMouseEnter(obj.GetComponent<Piece>());
         } else if (obj.GetComponent<Tile>()) {
-            OnTileMouseEnter(obj.GetComponent<Tile>());
+            CurrentPieceInteraction?.OnTileMouseEnter(obj.GetComponent<Tile>());
         }
     }
 
     void OnGameObjectMouseExit(GameObject obj) {
         if (obj.CompareTag("Board")) {
-            OnBoardMouseExit();
+            CurrentPieceInteraction?.OnBoardMouseExit();
         } else if (obj.CompareTag("Piece")) {
             OnPieceMouseExit(obj.GetComponent<Piece>());
         } else if (obj.GetComponent<Tile>()) {
-            OnTileMouseExit(obj.GetComponent<Tile>());
+            CurrentPieceInteraction?.OnTileMouseExit(obj.GetComponent<Tile>());
+        }
+    }
+
+    void OnPieceClicked(Piece piece) {
+        if (CurrentPieceInteraction != null) {
+            CurrentPieceInteraction.OnPieceClicked(piece);
+            return;
+        }
+        
+        if (IsPlayerOnTurn && !piece.IsEnemy) {
+            if (piece.HasMovedThisTurn && piece.HasAttackedThisTurn) {
+                // TODO: give feedback to the player
+                return;
+            }
+            CurrentPieceInteraction = new MovePieceInteraction(piece);
         }
     }
 
@@ -92,7 +143,7 @@ public sealed partial class GameState : MonoBehaviour {
         if (obj.CompareTag("Piece")) {
             OnPieceClicked(obj.GetComponent<Piece>());
         } else if (obj.GetComponent<Tile>()) {
-            OnTileClicked(obj.GetComponent<Tile>());
+            CurrentPieceInteraction?.OnTileClicked(obj.GetComponent<Tile>());
         }
     }
 
@@ -163,5 +214,19 @@ public sealed partial class GameState : MonoBehaviour {
 
         previousFrameHovers = new(frameHovers);
         frameHovers.Clear();
+    }
+
+    public void ShowAttackButton(Vector3 pos) {
+        var attackButton = GameObject.FindGameObjectWithTag("AttackButtonUIWorld");
+        if (attackButton) {
+            attackButton.transform.position = pos;
+        }
+    }
+
+    public void HideAttackButton() {
+        var attackButton = GameObject.FindGameObjectWithTag("AttackButtonUIWorld");
+        if (attackButton) {
+            attackButton.transform.position = new Vector3(0, 0, -1000);
+        }
     }
 }

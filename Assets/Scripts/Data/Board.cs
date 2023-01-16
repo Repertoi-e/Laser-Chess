@@ -33,13 +33,4 @@ public class Board : MonoBehaviour {
             }
         }
     }
-
-    public void ClearTilesGlowingToSignifyAvailableMovePosition() {
-        foreach (var item in PositionToTile) {
-            if (item.Value.IsGlowingToSignifyAvailableMovePosition) {
-                item.Value.IsGlowingToSignifyAvailableMovePosition = false;
-                item.Value.SetTargetEmissionColor(Color.black);
-            }
-        }
-    }
 }

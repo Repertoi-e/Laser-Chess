@@ -2,9 +2,9 @@ using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
-// We are handling things with transactions, because a real game
+// We are handling things with transactions because a real game
 // will probably have a system like that in place (or something along those lines)
-// to support stuff like undo/redo, replays. Transactions are stuff that happen in 
+// to support stuff like undo/redo, and replays. Transactions are stuff that happens in 
 // the game on the board: piece selection/moving, attacking, etc. (both for humans and AI).
 // Besides serialization, using "transactions" helps keep the code orthogonal -
 // different parts of the game can queue them up, and all are executed at the end of

@@ -13,5 +13,9 @@ public class Constants : MonoBehaviour {
 
     public Color kGlowAvailableAction;
 
+    public Color kTileGlowCanMove = new Color(0.35f, 0.35f, 0.35f, 0.35f);
+    public Color kTileGlowCanAttack = new Color(0.35f, 0.35f, 0.35f, 0.35f);
+
     public float kUnitSpeed = 2;
+    public Material kUnitTransparentMaterial;
 }

@@ -949,7 +949,10 @@ MonoBehaviour:
   kGlowHuman: {r: 0.19607843, g: 1, b: 0.49411765, a: 1}
   kGlowHoverAttackColor: {r: 1, g: 0.3019608, b: 0.3019608, a: 1}
   kGlowAvailableAction: {r: 0.19607843, g: 1, b: 0.49411765, a: 0}
+  kTileGlowCanMove: {r: 0.35, g: 0.35, b: 0.35, a: 0.35}
+  kTileGlowCanAttack: {r: 0.35, g: 0.35, b: 0.35, a: 0.35}
   kUnitSpeed: 3
+  kUnitTransparentMaterial: {fileID: 2100000, guid: e1e9482e03bab3f438f759a9869e11ff, type: 2}
 --- !u!4 &106546359
 Transform:
   m_ObjectHideFlags: 0
@@ -9196,7 +9199,6 @@ MonoBehaviour:
     m_Bits: 115
   Board: {fileID: 1527730699}
   Constants: {fileID: 106546358}
-  pieceTransparentMaterial: {fileID: 2100000, guid: e1e9482e03bab3f438f759a9869e11ff, type: 2}
 --- !u!1001 &1487397688
 PrefabInstance:
   m_ObjectHideFlags: 0

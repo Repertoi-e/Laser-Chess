@@ -1,4 +1,5 @@
 using System.Collections;
+using System;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 using System.Linq;
@@ -11,8 +12,6 @@ public class Tile : MonoBehaviour {
     private Color targetColor;
 
     private GameObject enemyBorder;
-
-    public bool IsGlowingToSignifyAvailableMovePosition = false; // this property controlled by the GameState
 
     void Start() {
         material = GetComponent<Renderer>().material;
@@ -32,9 +31,8 @@ public class Tile : MonoBehaviour {
             material.SetColor("_EmissionColor", targetColor);
         }
 
-        // @Speed: Perhaphs we can call this less frequently?
-
         bool shouldEnemyBorderBeActive = false;
+        Color newTargetColor = Color.black;
 
         var pieceAbove = GetPieceAbove();
         if (pieceAbove) {
@@ -42,21 +40,29 @@ public class Tile : MonoBehaviour {
                 shouldEnemyBorderBeActive = true;
             } else {
                 if (!pieceAbove.IsMoving && (!pieceAbove.HasAttackedThisTurn || !pieceAbove.HasMovedThisTurn)) {
-                    // Override to green cause tile has friendly unit that is ready for action
-                    material.SetColor("_EmissionColor", GameState.It.Constants.kGlowAvailableAction);
+                    newTargetColor = GameState.It.Constants.kGlowAvailableAction;
+                }
+            }
+        } else {
+            var interaction = GameState.It.CurrentPieceInteraction;
+            if (GameState.It.IsPlayerOnTurn && interaction != null) {
+                if (interaction.GetType() == typeof(MovePieceInteraction)) {
+                    var allowedMovePositions = ((MovePieceInteraction)interaction).AllowedMovePositions;
+                    if (allowedMovePositions != null) {
+                        if (Array.Exists(allowedMovePositions, x => x == transform.position)) {
+                            newTargetColor = GameState.It.Constants.kTileGlowCanMove;
+                        }
+                    }
                 }
             }
         }
 
         if (enemyBorder.activeSelf != shouldEnemyBorderBeActive)
             enemyBorder.SetActive(shouldEnemyBorderBeActive);
-    }
-
-    // Changes the emission color of the tile,
-    // pass c as Color.black to disable the effect.
-    public void SetTargetEmissionColor(Color c) {
-        elapsedTime = 0;
-        targetColor = c;
+        if (newTargetColor != targetColor) {
+            elapsedTime = 0;
+            targetColor = newTargetColor;
+        }
     }
 
     public Piece GetPieceAbove() {
