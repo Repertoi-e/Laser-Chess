@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public partial class GameState {
     public Material pieceTransparentMaterial;
@@ -17,6 +18,8 @@ public partial class GameState {
             OnGhostLostHover();
         }
 
+        tile.SetTargetEmissionColor(Constants.kGlowHoverAttackColor);
+        
         bool isAttacking = false; // @TODO XXX
         if (!IsPlayerOnTurn || !isAttacking)
             return;
@@ -90,6 +93,10 @@ public partial class GameState {
         if (selectedPiece) {
             EnsureGhostForPiece(selectedPiece);
             selectedPieceGhostModel.transform.position = tile.gameObject.transform.position;
+
+            var dir = tile.gameObject.transform.position - selectedPiece.gameObject.transform.position;
+            dir.Normalize();
+            selectedPieceGhostModel.transform.rotation = Quaternion.LookRotation(MathUtils.SnapVectorToCardinal(dir));
         }
     }
 

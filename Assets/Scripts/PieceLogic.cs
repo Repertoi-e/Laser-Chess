@@ -46,11 +46,19 @@ public partial class GameState {
         }
         Board.ClearTilesGlowingToSignifyAvailableMovePosition();
 
+        var attackButton = GameObject.FindGameObjectWithTag("AttackButtonUIWorld");
+        if (attackButton) {
+            attackButton.transform.position = new Vector3(0, 0, -1000);
+        }
+
         // Toggle selection when clicking multiple times
         if (selectedPiece == piece) {
             selectedPiece = null;
         } else {
             selectedPiece = piece;
+            if (attackButton) {
+                attackButton.transform.position = selectedPiece.gameObject.transform.position;
+            }
             foreach (var tileDest in GetAllowedMovePositionsForPiece(piece)) {
                 Tile tile;
                 Board.PositionToTile.TryGetValue(tileDest, out tile);
@@ -69,6 +77,11 @@ public partial class GameState {
             return;
 
         if (selectedPiece) {
+            var attackButton = GameObject.FindGameObjectWithTag("AttackButtonUIWorld");
+            if (attackButton) {
+                attackButton.transform.position = new Vector3(0, 0, -1000);
+            }
+
             QueueUpTransaction(new MoveTransaction() { piece = selectedPiece, target = tile.transform.position });
             selectedPiece = null;
 

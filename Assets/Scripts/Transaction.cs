@@ -36,17 +36,6 @@ public class MoveTransaction : Transaction {
         return true;
     }
 
-    static Vector3 SnapVectorToCardinal(Vector3 vec) {
-        int largestIndex = 0;
-        for (int i = 1; i < 3; i++) {
-            largestIndex = Mathf.Abs(vec[i]) > Mathf.Abs(vec[largestIndex]) ? i : largestIndex;
-        }
-        float newLargest = vec[largestIndex] > 0 ? 1 : -1;
-        vec = Vector3.zero;
-        vec[largestIndex] = newLargest;
-        return vec;
-    }
-
     public override IEnumerator Execute() {
         piece.IsMoving = true;
 
@@ -79,7 +68,7 @@ public class MoveTransaction : Transaction {
         beginRotation = piece.gameObject.transform.rotation;
 
         // Final rotation adjustment
-        var endTargetQuat = Quaternion.LookRotation(SnapVectorToCardinal(dir));
+        var endTargetQuat = Quaternion.LookRotation(MathUtils.SnapVectorToCardinal(dir));
         while (timePassed < timeToTake) {
             float t = (timePassed - movementTime) / (timeToTake - movementTime);
             piece.gameObject.transform.rotation = Quaternion.Lerp(beginRotation, endTargetQuat, t);
@@ -87,6 +76,8 @@ public class MoveTransaction : Transaction {
             timePassed += Time.deltaTime;
             yield return null;
         }
+
+        piece.gameObject.transform.rotation = endTargetQuat;
 
         piece.IsMoving = false;
         piece.HasMovedThisTurn = true;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -110,6 +111,7 @@ public sealed partial class GameState : MonoBehaviour {
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit[] hits = Physics.RaycastAll(ray, 100, raycastLayerMask, QueryTriggerInteraction.Collide);
+        Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
         foreach (RaycastHit hit in hits) {
             var obj = hit.collider.gameObject;
 

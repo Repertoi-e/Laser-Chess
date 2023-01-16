@@ -3015,7 +3015,7 @@ Camera:
   m_Depth: 10
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 96
+    m_Bits: 32
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -3110,7 +3110,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 23
+    m_Bits: 87
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -3538,11 +3538,11 @@ GameObject:
   - component: {fileID: 644918482}
   m_Layer: 5
   m_Name: UI World
-  m_TagString: Untagged
+  m_TagString: AttackButtonUIWorld
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &644918482
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3612,7 +3612,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 644918481}
   m_LocalRotation: {x: 0.5735764, y: -0, z: -0, w: 0.8191521}
-  m_LocalPosition: {x: 0, y: 0, z: 2}
+  m_LocalPosition: {x: 0, y: 0, z: -100}
   m_LocalScale: {x: 0.28, y: 0.28000006, z: 0.28000006}
   m_ConstrainProportionsScale: 1
   m_Children:

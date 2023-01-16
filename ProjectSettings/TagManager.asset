@@ -7,6 +7,7 @@ TagManager:
   - GameState
   - Board
   - Piece
+  - AttackButtonUIWorld
   layers:
   - Default
   - TransparentFX
