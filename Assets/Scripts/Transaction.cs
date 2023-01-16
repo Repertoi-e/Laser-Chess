@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 // We are handling things with transactions, because a real game
@@ -22,7 +23,7 @@ public class MoveTransaction : Transaction {
     public override bool IsValid() {
         if (piece.gameObject.transform.position == target)
             return false; // trying to move to the same position
-        
+
         Tile tile;
         GameState.It.Board.PositionToTile.TryGetValue(target, out tile);
         if (tile == null)
@@ -35,13 +36,59 @@ public class MoveTransaction : Transaction {
         return true;
     }
 
+    static Vector3 SnapVectorToCardinal(Vector3 vec) {
+        int largestIndex = 0;
+        for (int i = 1; i < 3; i++) {
+            largestIndex = Mathf.Abs(vec[i]) > Mathf.Abs(vec[largestIndex]) ? i : largestIndex;
+        }
+        float newLargest = vec[largestIndex] > 0 ? 1 : -1;
+        vec = Vector3.zero;
+        vec[largestIndex] = newLargest;
+        return vec;
+    }
+
     public override IEnumerator Execute() {
+        piece.IsMoving = true;
+
+        var dir = target - piece.gameObject.transform.position;
+        float distance = dir.magnitude;
+        dir /= distance; // normalize
+
+        float timeToTake = distance / GameState.It.Constants.kUnitSpeed;
+        float movementTime = 0.8f * timeToTake; // the other 20% are for the final rotation adjustment
+
+        var targetQuat = Quaternion.LookRotation(dir);
+
+        Quaternion beginRotation = piece.gameObject.transform.rotation;
+        Vector3 beginPosition = piece.gameObject.transform.position;
+
+        // Movement and rotation loop
         float timePassed = 0;
-        while (timePassed < 0.5f) {
+        while (timePassed < movementTime) {
+            float t = timePassed / movementTime;
+
+            piece.gameObject.transform.position = Vector3.Lerp(beginPosition, target, t);
+            piece.gameObject.transform.rotation = Quaternion.Lerp(beginRotation, targetQuat, t * 3);
+
             timePassed += Time.deltaTime;
             yield return null;
         }
+
         piece.gameObject.transform.position = target;
+
+        beginRotation = piece.gameObject.transform.rotation;
+
+        // Final rotation adjustment
+        var endTargetQuat = Quaternion.LookRotation(SnapVectorToCardinal(dir));
+        while (timePassed < timeToTake) {
+            float t = (timePassed - movementTime) / (timeToTake - movementTime);
+            piece.gameObject.transform.rotation = Quaternion.Lerp(beginRotation, endTargetQuat, t);
+
+            timePassed += Time.deltaTime;
+            yield return null;
+        }
+
+        piece.IsMoving = false;
         piece.HasMovedThisTurn = true;
     }
 }

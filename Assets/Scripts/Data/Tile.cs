@@ -41,7 +41,7 @@ public class Tile : MonoBehaviour {
             if (pieceAbove.IsEnemy) {
                 shouldEnemyBorderBeActive = true;
             } else {
-                if (!pieceAbove.HasAttackedThisTurn || !pieceAbove.HasMovedThisTurn) {
+                if (!pieceAbove.IsMoving && (!pieceAbove.HasAttackedThisTurn || !pieceAbove.HasMovedThisTurn)) {
                     // Override to green cause tile has friendly unit that is ready for action
                     material.SetColor("_EmissionColor", GameState.It.Constants.kGlowAvailableAction);
                 }

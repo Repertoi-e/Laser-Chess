@@ -22,6 +22,7 @@ public abstract class Piece : MonoBehaviour {
     }
 
     public bool HasMovedThisTurn = false; // managed by GameState
+    public bool IsMoving = false; // only used to disable tile glow, sigh
     public bool HasAttackedThisTurn = false; // managed by GameState
 
     private float elapsedTime = 0;

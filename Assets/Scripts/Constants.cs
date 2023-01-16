@@ -12,4 +12,6 @@ public class Constants : MonoBehaviour {
     public Color kGlowHoverAttackColor;
 
     public Color kGlowAvailableAction;
+
+    public float kUnitSpeed = 2;
 }
