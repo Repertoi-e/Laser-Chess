@@ -24,6 +24,9 @@ public class Constants : MonoBehaviour {
 
     public GameObject kHealthBarTemplate;
 
+    public float kFeedbackDuration = 3;
+    public float kFeedbackFadeOutTime = 3;
+
     void Start() {
         GameState.Constants = this;    
     }

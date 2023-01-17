@@ -16,7 +16,7 @@ public class MoveTransaction : Transaction {
             return false;
 
         if (tile.GetPieceAbove() != null) {
-            // TODO: give feedback to the player
+            GameState.FeedbackText.DoTryingToMoveToAnOccupiedTile();
             return false; // trying to move to position with a piece above
         }
         return true;

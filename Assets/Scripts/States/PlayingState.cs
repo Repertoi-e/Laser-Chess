@@ -81,6 +81,8 @@ public class PlayingState : State {
         Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
         foreach (RaycastHit hit in hits) {
             var obj = hit.collider.gameObject;
+            if (obj == null)
+                continue;
 
             if (obj.layer == LayerMask.NameToLayer("UI")) {
                 frameHovers.Clear();
@@ -99,6 +101,9 @@ public class PlayingState : State {
         }
 
         foreach (var entry in previousFrameHovers) {
+            if (entry.Key == null)
+                continue;
+
             bool objClicked;
             if (!frameHovers.TryGetValue(entry.Key, out objClicked)) {
                 // Not hovered this frame, also means it's not clicked anymore
@@ -117,6 +122,9 @@ public class PlayingState : State {
         }
 
         foreach (var entry in frameHovers) {
+            if (entry.Key == null)
+                continue;
+
             bool objClicked;
             if (!previousFrameHovers.TryGetValue(entry.Key, out objClicked)) {
                 // Hovered this frame

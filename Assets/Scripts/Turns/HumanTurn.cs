@@ -21,23 +21,28 @@ public class HumanTurn : Turn {
             CurrentPieceInteraction.OnPieceClicked(piece);
             return;
         }
+        DoPieceInteraction(piece);
+    }
+
+    public void DoPieceInteraction(Piece target) {
+        CurrentPieceInteraction = null;
 
         // If piece is clicked, check if moved
-        if (!piece.IsEnemy) {
-            if (MovedThisTurn.Contains(piece)) {
-                if (AttackedThisTurn.Contains(piece)) {
-                    // TODO: give feedback to the player
+        if (!target.IsEnemy) {
+            if (MovedThisTurn.Contains(target)) {
+                if (AttackedThisTurn.Contains(target)) {
+                    GameState.FeedbackText.DoPieceOutOfActions();
                     return;
                 }
-                CurrentPieceInteraction = new AttackPieceInteraction(piece) { humanTurn = this };
+                CurrentPieceInteraction = new AttackPieceInteraction(target) { humanTurn = this };
             } else {
-                if (AttackedThisTurn.Contains(piece)) {
-                    // TODO: give feedback to the player
+                if (AttackedThisTurn.Contains(target)) {
+                    GameState.FeedbackText.DoPieceOutOfActions();
                     return;
                 }
-                CurrentPieceInteraction = new MovePieceInteraction(piece) { humanTurn = this };
+                CurrentPieceInteraction = new MovePieceInteraction(target) { humanTurn = this };
                 if (!CurrentPieceInteraction.IsAvailable())
-                    CurrentPieceInteraction = new AttackPieceInteraction(piece) { humanTurn = this };
+                    CurrentPieceInteraction = new AttackPieceInteraction(target) { humanTurn = this };
             }
         }
     }

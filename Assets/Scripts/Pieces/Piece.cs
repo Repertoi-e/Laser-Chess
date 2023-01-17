@@ -55,9 +55,8 @@ public abstract class Piece : MonoBehaviour {
                 var transaction = new PieceDeathTransaction() { piece = this };
                 if (transaction.IsValid())
                     playingState.QueueUpValidTransaction(transaction);
-            } else {
-                healthBar?.SetHitPoints(value);
             }
+            healthBar?.SetHitPoints(value);
         }
     }
 
@@ -68,6 +67,10 @@ public abstract class Piece : MonoBehaviour {
 
     void Start() {
         materials = (from c in GetComponentsInChildren<Renderer>() select c.material).ToList();
+    }
+
+    ~Piece() {
+        Destroy(healthBar?.gameObject);
     }
 
     void Update() {

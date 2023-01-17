@@ -3,6 +3,7 @@ using UnityEngine;
 public static class GameState {
     public static Board Board;
     public static Constants Constants;
+    public static FeedbackText FeedbackText;
 
     private static State currentState = null;
 

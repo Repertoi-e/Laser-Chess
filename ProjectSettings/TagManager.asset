@@ -8,6 +8,7 @@ TagManager:
   - Board
   - Piece
   - AttackButtonUIWorld
+  - FeedbackText
   layers:
   - Default
   - TransparentFX

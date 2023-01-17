@@ -9,7 +9,7 @@ public class HealthBar : MonoBehaviour {
             for (int i = 1; i < transform.childCount; i++)
                 Destroy(transform.GetChild(i));
 
-            for (int i = 0; i < max; i++) {
+            for (int i = 1; i < max; i++) {
                 var newBar = Instantiate(bar);
                 newBar.SetParent(transform, false);
             }
@@ -29,7 +29,7 @@ public class HealthBar : MonoBehaviour {
     public void SetHitPoints(int hp) {
         Debug.Assert(hp >= 0);
         for (int i = 0; i < transform.childCount; i++) {
-            transform.GetChild(i).gameObject.SetActive(i <= hp);
+            transform.GetChild(i).gameObject.SetActive(i < hp);
         }
     }
 }

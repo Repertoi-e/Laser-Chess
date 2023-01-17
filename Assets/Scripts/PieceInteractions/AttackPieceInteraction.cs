@@ -16,10 +16,10 @@ public class AttackPieceInteraction : PieceInteraction {
         AllowedAttackPositions = GetAllowedAttackPositions().ToArray();
 
         var attackPieces = (from p in
-                               from c in AllowedAttackPositions
-                               select GameState.Board.GetTileAt(c)?.GetPieceAbove()
-                           where p != null && p.IsEnemy
-                           select p).ToArray();
+                                from c in AllowedAttackPositions
+                                select GameState.Board.GetTileAt(c)?.GetPieceAbove()
+                            where p != null && p.IsEnemy
+                            select p).ToArray();
         AllowedAttackPieces = (from p in attackPieces
                                select p.gameObject.transform.position).ToArray();
 
@@ -38,18 +38,28 @@ public class AttackPieceInteraction : PieceInteraction {
     }
 
     public override void OnPieceClicked(Piece target) {
-        // This is only run for shoot attacks, which require input
-        if (piece.AttackType != Piece.EAttackType.Shoot)
+        if (!target.IsEnemy) {
+            humanTurn.DoPieceInteraction(target);
             return;
-
-        if (Array.Exists(AllowedAttackPieces, x => x == target.gameObject.transform.position)) {
-
-            var transaction = new AttackTransaction(target) { piece = piece };
-            if (transaction.IsValid()) {
-                humanTurn.playingState.QueueUpValidTransaction(transaction);
-                humanTurn.AttackedThisTurn.Add(piece);
-            }
         }
+
+        // This is only run for shoot attacks, which require input
+        if (piece.AttackType != Piece.EAttackType.Shoot) {
+            GameState.FeedbackText.DoPieceDoesntShoot();
+            return;
+        }
+
+        if (!Array.Exists(AllowedAttackPieces, x => x == target.gameObject.transform.position)) {
+            GameState.FeedbackText.DoPieceOutOfRangeAttack();
+            return;
+        }
+
+        var transaction = new AttackTransaction(target) { piece = piece };
+        if (transaction.IsValid()) {
+            humanTurn.playingState.QueueUpValidTransaction(transaction);
+            humanTurn.AttackedThisTurn.Add(piece);
+        }
+
         humanTurn.CurrentPieceInteraction = null;
     }
 

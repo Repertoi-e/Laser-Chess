@@ -99,13 +99,15 @@ public class MovePieceInteraction : PieceInteraction {
         if (target == piece) {
             humanTurn.CurrentPieceInteraction = new AttackPieceInteraction(piece) { humanTurn = humanTurn };
         } else {
-            humanTurn.CurrentPieceInteraction = null;
+            humanTurn.DoPieceInteraction(target);
         }
     }
 
     public override void OnTileClicked(Tile tile) {
-        if (!Array.Exists(AllowedMovePositions, x => x == tile.gameObject.transform.position))
+        if (!Array.Exists(AllowedMovePositions, x => x == tile.gameObject.transform.position)) {
+            GameState.FeedbackText.DoPieceOutOfRangeMove();
             return;
+        }
 
         var transaction = new MoveTransaction() { piece = piece, target = tile.transform.position };
         if (transaction.IsValid()) {
