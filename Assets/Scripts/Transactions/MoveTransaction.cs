@@ -1,20 +1,7 @@
+using System;
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
-
-// We are handling things with transactions because a real game
-// will probably have a system like that in place (or something along those lines)
-// to support stuff like undo/redo, and replays. Transactions are stuff that happens in 
-// the game on the board: piece selection/moving, attacking, etc. (both for humans and AI).
-// Besides serialization, using "transactions" helps keep the code orthogonal -
-// different parts of the game can queue them up, and all are executed at the end of
-// the game loop. The bad alternative would be if every part of the game could execute
-// potentially arbitrary many actions, so everything becomes coupled and spaghetti-like.
-public abstract class Transaction {
-    public abstract bool IsValid();
-    public abstract IEnumerator Execute();
-
-}
 
 public class MoveTransaction : Transaction {
     public Piece piece;
@@ -34,10 +21,21 @@ public class MoveTransaction : Transaction {
         }
         return true;
     }
+    
+    // Gives rotation that drifty feeling, although it
+    // may be only suitable to tanks and not planes for example.
+    // TODO: Support different procedural animations for different pieces.
+    float easeOutElastic(float x) {
+        const float c4 = (2 * Mathf.PI) / 3;
+
+        return x == 0
+          ? 0
+          : x == 1
+          ? 1
+          : Mathf.Pow(2, -10 * x) * Mathf.Sin((x * 10 - 0.75f) * c4) + 1;
+    }
 
     public override IEnumerator Execute() {
-        piece.IsMoving = true;
-
         var dir = target - piece.gameObject.transform.position;
         float distance = dir.magnitude;
         dir /= distance; // normalize
@@ -55,8 +53,11 @@ public class MoveTransaction : Transaction {
         while (timePassed < movementTime) {
             float t = timePassed / movementTime;
 
-            piece.gameObject.transform.position = Vector3.Lerp(beginPosition, target, t);
-            piece.gameObject.transform.rotation = Quaternion.Lerp(beginRotation, targetQuat, t * 3);
+            float posEase =  t;
+            float rotEase =  easeOutElastic(t / 2);
+
+            piece.gameObject.transform.position = Vector3.Lerp(beginPosition, target, posEase);
+            piece.gameObject.transform.rotation = Quaternion.Lerp(beginRotation, targetQuat, rotEase);
 
             timePassed += Time.deltaTime;
             yield return null;
@@ -77,7 +78,5 @@ public class MoveTransaction : Transaction {
         }
 
         piece.gameObject.transform.rotation = endTargetQuat;
-
-        piece.IsMoving = false;
     }
 }

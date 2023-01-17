@@ -15,11 +15,14 @@ public class Constants : MonoBehaviour {
 
     public Color kTileGlowCanMove = new Color(0.35f, 0.35f, 0.35f, 0.35f);
     public Color kTileGlowCanAttack = new Color(0.35f, 0.35f, 0.35f, 0.35f);
+    public Color kTileGlowCanAttackPiece = new Color(0.35f, 0.35f, 0.35f, 0.35f);
 
     public float kUnitSpeed = 2;
     public Material kUnitTransparentMaterial;
 
     public LayerMask kRaycastLayerMask;
+
+    public GameObject kHealthBarTemplate;
 
     void Start() {
         GameState.Constants = this;    

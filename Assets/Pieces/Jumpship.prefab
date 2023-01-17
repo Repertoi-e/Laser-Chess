@@ -59,10 +59,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30df453d3a889ec4894b4e032d6c697c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HasMovedThisTurn: 0
   IsMoving: 0
-  HasAttackedThisTurn: 0
-  hitPoints: 2
+  maxHitPoints: 2
   attackPower: 2
 --- !u!1001 &6639404052419702366
 PrefabInstance:

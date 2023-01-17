@@ -8,7 +8,7 @@ public class HumanTurn : Turn {
     public PieceInteraction CurrentPieceInteraction {
         get => currentPieceInteraction;
         set {
-            currentPieceInteraction?.End();
+            currentPieceInteraction?.Cleanup();
             currentPieceInteraction = value;
         }
     }
@@ -31,9 +31,19 @@ public class HumanTurn : Turn {
                 }
                 CurrentPieceInteraction = new AttackPieceInteraction(piece) { humanTurn = this };
             } else {
+                if (AttackedThisTurn.Contains(piece)) {
+                    // TODO: give feedback to the player
+                    return;
+                }
                 CurrentPieceInteraction = new MovePieceInteraction(piece) { humanTurn = this };
+                if (!CurrentPieceInteraction.IsAvailable())
+                    CurrentPieceInteraction = new AttackPieceInteraction(piece) { humanTurn = this };
             }
         }
+    }
+
+    public void AttackButtonPressed() {
+        (CurrentPieceInteraction as AttackPieceInteraction)?.AttackButtonPressed();
     }
 
     public override void OnBoardMouseEnter() {

@@ -33,6 +33,10 @@ public class Board : MonoBehaviour {
         GameState.Update();
     }
 
+    public void AttackButtonPressed() {
+        ((GameState.CurrentState as PlayingState)?.Turn as HumanTurn)?.AttackButtonPressed();
+    }
+
     public Tile GetTileAt(Vector3 dest) {
         Tile tile;
         positionToTile.TryGetValue(dest, out tile);

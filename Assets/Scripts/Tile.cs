@@ -7,13 +7,8 @@ public class Tile : MonoBehaviour {
     private float elapsedTime = 0;
     private Color targetColor;
 
-    private GameObject enemyBorder;
-
     void Start() {
         material = GetComponent<Renderer>().material;
-
-        enemyBorder = gameObject.transform.Find("Border").gameObject;
-        enemyBorder.SetActive(false);
     }
 
     void Update() {
@@ -27,41 +22,47 @@ public class Tile : MonoBehaviour {
             material.SetColor("_EmissionColor", targetColor);
         }
 
-        bool shouldEnemyBorderBeActive = false;
         Color newTargetColor = Color.black;
 
-        bool isPlayingState = GameState.CurrentState?.GetType() == typeof(PlayingState);
-        var isHumanTurn = isPlayingState ? ((PlayingState) GameState.CurrentState).Turn?.GetType() == typeof(HumanTurn) : false;
+        PlayingState playingState = GameState.CurrentState as PlayingState;
+        HumanTurn humanTurn = playingState?.Turn as HumanTurn;
 
         var pieceAbove = GetPieceAbove();
         if (pieceAbove) {
-            if (pieceAbove.IsEnemy) {
-                shouldEnemyBorderBeActive = true;
-            } else {
-                if (isHumanTurn) {
-                    var humanTurn = (HumanTurn) ((PlayingState)GameState.CurrentState).Turn;
-                    if (!humanTurn.AttackedThisTurn.Contains(pieceAbove) || !humanTurn.MovedThisTurn.Contains(pieceAbove)) {
-                        newTargetColor = GameState.Constants.kGlowAvailableAction;
+            if (!pieceAbove.IsEnemy) {
+                if (humanTurn != null) {
+                    if (!humanTurn.AttackedThisTurn.Contains(pieceAbove)) {
+                        if (!humanTurn.MovedThisTurn.Contains(pieceAbove)) {
+                            newTargetColor = GameState.Constants.kTileGlowCanMove;
+                        } else {
+                            newTargetColor = GameState.Constants.kTileGlowCanAttack;
+                        }
                     }
                 }
             }
         } else {
-            if (isHumanTurn) {
-                var humanTurn = (HumanTurn) ((PlayingState)GameState.CurrentState).Turn;
-                var interaction = humanTurn.CurrentPieceInteraction;
-                if (interaction?.GetType() == typeof(MovePieceInteraction)) {
-                    var allowedMovePositions = ((MovePieceInteraction)interaction).AllowedMovePositions;
-                    if (allowedMovePositions != null) {
-                        if (Array.Exists(allowedMovePositions, x => x == transform.position)) {
-                            newTargetColor = GameState.Constants.kTileGlowCanMove;
-                        }
+            var moveInteraction = humanTurn?.CurrentPieceInteraction as MovePieceInteraction;
+            if (moveInteraction != null) {
+                var allowedMovePositions = moveInteraction.AllowedMovePositions;
+                if (allowedMovePositions != null) {
+                    if (Array.Exists(allowedMovePositions, x => x == transform.position)) {
+                        newTargetColor = GameState.Constants.kTileGlowCanMove;
                     }
                 }
             }
         }
 
-        if (enemyBorder.activeSelf != shouldEnemyBorderBeActive)
-            enemyBorder.SetActive(shouldEnemyBorderBeActive);
+        var attackInteraction = humanTurn?.CurrentPieceInteraction as AttackPieceInteraction;
+        if (attackInteraction != null) {
+            var allowedAttackPositions = attackInteraction.AllowedAttackPositions;
+            var allowedAttackPieces = attackInteraction.AllowedAttackPieces;
+            if (allowedAttackPieces != null && Array.Exists(allowedAttackPieces, x => x == transform.position)) {
+                newTargetColor = GameState.Constants.kTileGlowCanAttackPiece;
+            } else if (allowedAttackPositions != null && Array.Exists(allowedAttackPositions, x => x == transform.position)) {
+                newTargetColor = GameState.Constants.kTileGlowCanAttack;
+            }
+        }
+
         if (newTargetColor != targetColor) {
             elapsedTime = 0;
             targetColor = newTargetColor;

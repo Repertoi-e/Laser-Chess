@@ -7,7 +7,17 @@ public abstract class PieceInteraction {
         get; init;
     }
 
-    public virtual void End() {
+    public Piece piece;
+
+    public PieceInteraction(Piece piece) {
+        this.piece = piece;
+    }
+
+    public virtual bool IsAvailable() {
+        return true;
+    }
+
+    public virtual void Cleanup() {
     }
 
     public virtual void OnBoardMouseEnter() {
@@ -25,13 +35,13 @@ public abstract class PieceInteraction {
     public virtual void OnTileClicked(Tile tile) {
     }
 
-    public virtual void OnPieceMouseEnter(Piece piece) {
+    public virtual void OnPieceMouseEnter(Piece target) {
     }
 
-    public virtual void OnPieceMouseExit(Piece piece) {
+    public virtual void OnPieceMouseExit(Piece target) {
     }
 
-    public virtual void OnPieceClicked(Piece piece) {
+    public virtual void OnPieceClicked(Piece target) {
     }
 }
 

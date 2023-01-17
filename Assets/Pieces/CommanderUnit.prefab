@@ -59,10 +59,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3a7f11df37eb6f4099251fc1cc37411, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HasMovedThisTurn: 0
   IsMoving: 0
-  HasAttackedThisTurn: 0
-  hitPoints: 5
+  maxHitPoints: 5
   attackPower: 0
 --- !u!1001 &374768420075195224
 PrefabInstance:
@@ -142,7 +140,7 @@ PrefabInstance:
     - target: {fileID: -4683669308469848369, guid: afd87fea41b363d4f97dad4cca16fad7, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: e7bd247ebd0bb5f4299cb3187f898f79, type: 2}
+      objectReference: {fileID: 2100000, guid: a6890e01055a37c44a7cb38c67507ef7, type: 2}
     - target: {fileID: -4041641714634873723, guid: afd87fea41b363d4f97dad4cca16fad7, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 

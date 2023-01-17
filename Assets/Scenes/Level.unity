@@ -948,14 +948,16 @@ MonoBehaviour:
   kGlowEnemy: {r: 1, g: 0.3019608, b: 0.3019608, a: 1}
   kGlowHuman: {r: 0.19607843, g: 1, b: 0.49411765, a: 1}
   kGlowHoverAttackColor: {r: 1, g: 0.3019608, b: 0.3019608, a: 1}
-  kGlowAvailableAction: {r: 0.19607843, g: 1, b: 0.49411765, a: 0}
+  kGlowAvailableAction: {r: 0.11823528, g: 0.603, b: 0.29795286, a: 0}
   kTileGlowCanMove: {r: 0.35, g: 0.35, b: 0.35, a: 0.35}
-  kTileGlowCanAttack: {r: 0.35, g: 0.35, b: 0.35, a: 0.35}
+  kTileGlowCanAttack: {r: 0.504, g: 0.47830594, b: 0, a: 1}
+  kTileGlowCanAttackPiece: {r: 0.518, g: 0.32298824, b: 0.052815683, a: 1}
   kUnitSpeed: 3
   kUnitTransparentMaterial: {fileID: 2100000, guid: e1e9482e03bab3f438f759a9869e11ff, type: 2}
   kRaycastLayerMask:
     serializedVersion: 2
     m_Bits: 115
+  kHealthBarTemplate: {fileID: 6117700747663353281, guid: 6209e86e7cdf1ec4aa759b1e3e4f95de, type: 3}
 --- !u!4 &106546359
 Transform:
   m_ObjectHideFlags: 0
@@ -3543,7 +3545,7 @@ GameObject:
   - component: {fileID: 644918483}
   - component: {fileID: 644918482}
   m_Layer: 5
-  m_Name: UI World
+  m_Name: AttackButtonUIWorld
   m_TagString: AttackButtonUIWorld
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3624,7 +3626,7 @@ RectTransform:
   m_Children:
   - {fileID: 936889734}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 70, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -6005,7 +6007,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 936889736}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1527730699}
+        m_TargetAssemblyTypeName: Board, Assembly-CSharp
+        m_MethodName: AttackButtonPressed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &936889736
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12611,7 +12625,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8280620695112274067, guid: ee755aa3efa6a124bb2b0b42911ced2d, type: 3}
       propertyPath: m_RootOrder
-      value: 11
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8280620695112274067, guid: ee755aa3efa6a124bb2b0b42911ced2d, type: 3}
       propertyPath: m_LocalPosition.x
