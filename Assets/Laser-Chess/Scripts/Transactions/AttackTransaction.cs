@@ -60,7 +60,7 @@ public class AttackTransaction : Transaction {
                 vlb.LineColor = piece.IsEnemy ? GameState.Constants.kEnemyColor : GameState.Constants.kAllyColor;
 
                 timePassed = 0;
-                while (timePassed < 1) {
+                while (timePassed < 0.15f) {
                     timePassed += Time.deltaTime;
                     yield return null;
                 }
