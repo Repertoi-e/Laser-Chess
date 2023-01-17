@@ -18,4 +18,10 @@ public class Constants : MonoBehaviour {
 
     public float kUnitSpeed = 2;
     public Material kUnitTransparentMaterial;
+
+    public LayerMask kRaycastLayerMask;
+
+    void Start() {
+        GameState.Constants = this;    
+    }
 }

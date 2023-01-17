@@ -2,7 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class PieceInteraction {
+public abstract class Turn {
+    public PlayingState playingState {
+        get; init;
+    }
+
     public virtual void End() {
     }
 
@@ -21,12 +25,12 @@ public abstract class PieceInteraction {
     public virtual void OnTileClicked(Tile tile) {
     }
 
-    public virtual void OnPieceMouseEnter(Piece tile) {
+    public virtual void OnPieceMouseEnter(Piece piece) {
     }
 
-    public virtual void OnPieceMouseExit(Piece tile) {
+    public virtual void OnPieceMouseExit(Piece piece) {
     }
 
-    public virtual void OnPieceClicked(Piece tile) {
+    public virtual void OnPieceClicked(Piece piece) {
     }
 }

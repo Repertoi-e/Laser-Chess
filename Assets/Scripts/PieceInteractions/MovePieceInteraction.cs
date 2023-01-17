@@ -1,11 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
 public class MovePieceInteraction : PieceInteraction {
-    public Vector3[] AllowedMovePositions = null; // Each tile looks if MovePieceInteraction is currently active, then looks at this to determine if to light up. 
+    public Vector3[] AllowedMovePositions = null;
 
     private Piece selectedPiece;
 
@@ -19,14 +18,14 @@ public class MovePieceInteraction : PieceInteraction {
     public MovePieceInteraction(Piece piece) {
         selectedPiece = piece;
         AllowedMovePositions = GetAllowedMovePositionsForPiece(piece).ToArray();
-        GameState.It.ShowAttackButton(piece.gameObject.transform.position);
+        ShowAttackButton(piece.gameObject.transform.position);
     }
 
     public override void End() {
         OnGhostLostHover();
         if (selectedPieceGhostModel)
             GameObject.Destroy(selectedPieceGhostModel);
-        GameState.It.HideAttackButton();
+        HideAttackButton();
     }
 
     bool IsMoveBlocked(Vector3 start, Vector3 end) {
@@ -35,8 +34,7 @@ public class MovePieceInteraction : PieceInteraction {
 
         for (int i = 1; i < Math.Max(Math.Abs(start.x - end.x), Math.Abs(start.z - end.z)); i++) {
             var dest = new Vector3(start.x + i * xIncrement, 0, start.z + i * zIncrement);
-            Tile tile;
-            GameState.It.Board.PositionToTile.TryGetValue(dest, out tile);
+            Tile tile = GameState.Board.GetTileAt(dest);
             if (tile == null || tile.GetPieceAbove() != null) {
                 return true;
             }
@@ -51,8 +49,7 @@ public class MovePieceInteraction : PieceInteraction {
 
             var dest = rel + piece.transform.position;
 
-            Tile tile;
-            GameState.It.Board.PositionToTile.TryGetValue(dest, out tile);
+            Tile tile = GameState.Board.GetTileAt(dest);
             if (tile != null && tile.GetPieceAbove() == null) {
                 if (piece.CanIgnorePieceBlock || !IsMoveBlocked(piece.gameObject.transform.position, dest)) {
                     yield return dest;
@@ -108,20 +105,39 @@ public class MovePieceInteraction : PieceInteraction {
 
             var renderers = modelCopy.GetComponentsInChildren<Renderer>();
             foreach (var renderer in renderers) {
-                renderer.material = GameState.It.Constants.kUnitTransparentMaterial;
+                renderer.material = GameState.Constants.kUnitTransparentMaterial;
             }
         }
     }
 
     public override void OnPieceClicked(Piece piece) {
-        GameState.It.CurrentPieceInteraction = null;
+        // Double clicking on a piece just deselects it
+        humanTurn.CurrentPieceInteraction = null;
     }
 
     public override void OnTileClicked(Tile tile) {
         if (!Array.Exists(AllowedMovePositions, x => x == tile.gameObject.transform.position))
             return;
 
-        GameState.It.QueueUpTransaction(new MoveTransaction() { piece = selectedPiece, target = tile.transform.position });
-        GameState.It.CurrentPieceInteraction = null;
+        var transaction = new MoveTransaction() { piece = selectedPiece, target = tile.transform.position };
+        if (transaction.IsValid()) {
+            humanTurn.playingState.QueueUpValidTransaction(transaction);
+            humanTurn.MovedThisTurn.Add(selectedPiece);
+        }
+        humanTurn.CurrentPieceInteraction = null;
+    }
+
+    void ShowAttackButton(Vector3 pos) {
+        var attackButton = GameObject.FindGameObjectWithTag("AttackButtonUIWorld");
+        if (attackButton) {
+            attackButton.transform.position = pos;
+        }
+    }
+
+    void HideAttackButton() {
+        var attackButton = GameObject.FindGameObjectWithTag("AttackButtonUIWorld");
+        if (attackButton) {
+            attackButton.transform.position = new Vector3(0, 0, -1000);
+        }
     }
 }

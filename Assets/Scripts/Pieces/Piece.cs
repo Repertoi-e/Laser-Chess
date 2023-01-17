@@ -25,9 +25,7 @@ public abstract class Piece : MonoBehaviour {
         get => false;
     } // only true for knight-like Jumpship for now
 
-    public bool HasMovedThisTurn = false; // managed by GameState
     public bool IsMoving = false; // only used to disable tile glow, sigh
-    public bool HasAttackedThisTurn = false; // managed by GameState
 
     private float elapsedTime = 0;
 
@@ -51,8 +49,8 @@ public abstract class Piece : MonoBehaviour {
     }
 
     void Update() {
-        if (elapsedTime < GameState.It.Constants.kGlowAnimationDuration) {
-            float t = elapsedTime / GameState.It.Constants.kGlowAnimationDuration;
+        if (elapsedTime < GameState.Constants.kGlowAnimationDuration) {
+            float t = elapsedTime / GameState.Constants.kGlowAnimationDuration;
             t = t * t * (3f - 2f * t);
 
             foreach (var material in materials)

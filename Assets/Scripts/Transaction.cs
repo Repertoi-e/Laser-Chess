@@ -24,8 +24,7 @@ public class MoveTransaction : Transaction {
         if (piece.gameObject.transform.position == target)
             return false; // trying to move to the same position
 
-        Tile tile;
-        GameState.It.Board.PositionToTile.TryGetValue(target, out tile);
+        Tile tile = GameState.Board.GetTileAt(target);
         if (tile == null)
             return false;
 
@@ -43,7 +42,7 @@ public class MoveTransaction : Transaction {
         float distance = dir.magnitude;
         dir /= distance; // normalize
 
-        float timeToTake = distance / GameState.It.Constants.kUnitSpeed;
+        float timeToTake = distance / GameState.Constants.kUnitSpeed;
         float movementTime = 0.8f * timeToTake; // the other 20% are for the final rotation adjustment
 
         var targetQuat = Quaternion.LookRotation(dir);
@@ -80,6 +79,5 @@ public class MoveTransaction : Transaction {
         piece.gameObject.transform.rotation = endTargetQuat;
 
         piece.IsMoving = false;
-        piece.HasMovedThisTurn = true;
     }
 }
