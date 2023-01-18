@@ -27,6 +27,12 @@ public class AITurn : Turn {
             pieces.Enqueue(GetPriority(p), p);
         }
         play = Play();
+
+        GameState.Constants.aiTurnUI.SetActive(true);
+    }
+
+    public override void End() {
+        GameState.Constants.aiTurnUI.SetActive(false);
     }
 
     public override void Update() {

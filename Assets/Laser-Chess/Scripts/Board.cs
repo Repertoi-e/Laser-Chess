@@ -8,7 +8,7 @@ public class Board : MonoBehaviour {
     private Dictionary<Vector3, Tile> positionToTile = new();
 
     void Start() {
-        // We don't call 
+        // Don't call 
         // GenerateBoard();
         // anymore, because being able to see the tiles
         // while not playing is useful. If we need to 
@@ -29,6 +29,16 @@ public class Board : MonoBehaviour {
         playingState.Turn = new HumanTurn();
     }
 
+    public Tile GetTileAt(Vector3 dest) {
+        Tile tile;
+        positionToTile.TryGetValue(dest, out tile);
+        return tile;
+    }
+
+
+    // Using Board as a proxy cause we don't have
+    // a GameState object in the world.
+
     void Update() {
         GameState.Update();
     }
@@ -39,12 +49,6 @@ public class Board : MonoBehaviour {
 
     public void EndTurnButtonPressed() {
         (GameState.CurrentState as PlayingState)?.EndTurnButtonPressed();
-    }
-
-    public Tile GetTileAt(Vector3 dest) {
-        Tile tile;
-        positionToTile.TryGetValue(dest, out tile);
-        return tile;
     }
 
     void GenerateBoard() {

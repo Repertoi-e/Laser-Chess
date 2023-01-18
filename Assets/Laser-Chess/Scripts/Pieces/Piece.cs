@@ -55,7 +55,7 @@ public abstract class Piece : MonoBehaviour {
                 if (transaction.IsValid())
                     playingState.QueueUpValidTransaction(transaction);
             }
-            healthBar?.SetHitPoints(value);
+            healthBar?.SetHitPoints(hitPoints);
         }
     }
 

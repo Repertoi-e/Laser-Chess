@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PlayingState : State {
@@ -12,6 +13,10 @@ public class PlayingState : State {
             turn?.End();
             turn = value;
         }
+    }
+
+    public override void End() {
+        Turn = null;
     }
 
     public void EndTurnButtonPressed() {
@@ -76,6 +81,26 @@ public class PlayingState : State {
                 transactionsForThisFrame.Dequeue();
             }
             return; // don't do any more logic while transactions are occuring
+        }
+
+        int commandUnitsCount = (from e in
+                                     from c in GameObject.FindGameObjectsWithTag("Piece")
+                                     select c.GetComponent<Piece>()
+                                 where e.IsEnemy && e is CommandUnit
+                                 select e).Count();
+        if (commandUnitsCount == 0) {
+            GameState.CurrentState = new WinnerState();
+            return;
+        }
+
+        int playerUnitsCount = (from e in
+                                    from c in GameObject.FindGameObjectsWithTag("Piece")
+                                    select c.GetComponent<Piece>()
+                                where !e.IsEnemy
+                                select e).Count();
+        if (playerUnitsCount == 0) {
+            GameState.CurrentState = new LoserState();
+            return;
         }
 
         bool mousePressed = Input.GetMouseButton(0);

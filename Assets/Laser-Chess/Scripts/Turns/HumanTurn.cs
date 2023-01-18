@@ -15,12 +15,10 @@ public class HumanTurn : Turn {
 
     public HumanTurn() : base() {
         GameState.Constants.yourTurnUI.SetActive(true);
-        GameState.Constants.aiTurnUI.SetActive(false);
     }
 
     public override void End() {
         GameState.Constants.yourTurnUI.SetActive(false);
-        GameState.Constants.aiTurnUI.SetActive(true);
     }
 
     public HashSet<Piece> AttackedThisTurn = new();

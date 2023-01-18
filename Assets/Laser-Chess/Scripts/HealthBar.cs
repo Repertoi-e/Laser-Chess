@@ -27,7 +27,6 @@ public class HealthBar : MonoBehaviour {
     }
 
     public void SetHitPoints(int hp) {
-        Debug.Assert(hp >= 0);
         for (int i = 0; i < transform.childCount; i++) {
             transform.GetChild(i).gameObject.SetActive(i < hp);
         }
