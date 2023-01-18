@@ -35,9 +35,13 @@ public class Constants : MonoBehaviour {
     public GameObject kAllyExplosion;
 
     public GameObject kShootLaser;
+    public GameObject kWinnerExplosion;
 
     public GameObject yourTurnUI;
     public GameObject aiTurnUI;
+
+    public GameObject youWinUI;
+    public GameObject youLoseUI;
 
 
     void Start() {

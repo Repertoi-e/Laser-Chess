@@ -1,7 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
+using UnityEngine;
 
 public class AITurn : Turn {
     PriorityQueue<Piece> pieces = new();
@@ -36,7 +37,7 @@ public class AITurn : Turn {
     }
 
     public override void Update() {
-        if (!play.MoveNext()) {
+        if (play != null && !play.MoveNext()) {
             play = null;
             playingState.Turn = new HumanTurn();
         }
@@ -70,32 +71,56 @@ public class AITurn : Turn {
                select x;
     }
 
-    bool TryMovePiece(Piece p) {
-        var moveInteraction = new MovePieceInteraction(p);
+    bool TryMovePiece(Piece piece) {
+        var moveInteraction = new MovePieceInteraction(piece);
         if (moveInteraction.IsAvailable()) {
             Vector3 dest;
-            if (p is Drone) {
+            if (piece is Drone) {
                 // We know it's exactly 1 since the Drone has
                 // only one place to go by rule.
                 dest = moveInteraction.AllowedMovePositions[0];
-            } else if (p is Dreadnought) {
-                var closest = GetPlayerPieces().OrderBy(x => (p.gameObject.transform.position - x.gameObject.transform.position).sqrMagnitude).First();
+            } else if (piece is Dreadnought) {
+                var closest = GetPlayerPieces().OrderBy(x => (piece.gameObject.transform.position - x.gameObject.transform.position).sqrMagnitude).First();
 
-                Vector3 dir = (closest.gameObject.transform.position - p.gameObject.transform.position).normalized;
+                Vector3 dir = (closest.gameObject.transform.position - piece.gameObject.transform.position).normalized;
 
                 // Get the vector with the dot product closest to 0,
                 // i.e. the best direction to move closer.
-                dest = moveInteraction.AllowedMovePositions.OrderBy(x => Vector3.Dot(dir, (p.gameObject.transform.position - x).normalized)).First();
-            } else if (p is CommandUnit) {
-                // TODO !
-                dest = p.gameObject.transform.position;
+                dest = moveInteraction.AllowedMovePositions.OrderBy(x => Vector3.Dot(dir, (piece.gameObject.transform.position - x).normalized)).First();
+            } else if (piece is CommandUnit) {
+                List<Vector3> options = moveInteraction.AllowedMovePositions.Concat(new[] {piece.gameObject.transform.position }).ToList();
+
+                bool eliminatedOptions = false;
+                foreach (var playerPiece in GetPlayerPieces()) {
+                    var potentialAttack = new AttackPieceInteraction(playerPiece);
+                    if (potentialAttack.IsAvailable()) {
+                        var attackable = potentialAttack.AllowedAttackPieces.Intersect(options);
+                        foreach (var a in attackable) {
+                            options.Remove(a);
+                            eliminatedOptions = true;
+                        }
+                    }
+                }
+
+                if (eliminatedOptions) {
+                    // Here we just take the first options, but again.
+                    // We can make the AI infinitely better.
+                    if (options.Count == 0) {
+                        dest = moveInteraction.AllowedMovePositions[0];
+                    } else {
+                        dest = options[0];
+                    }
+                } else {
+                    // Do nothing...
+                    dest = piece.gameObject.transform.position;
+                }
             } else {
                 // Unknown unit type ?
                 Debug.Assert(false);
                 dest = Vector3.zero;
             }
 
-            var transaction = new MoveTransaction() { piece = p, target = dest };
+            var transaction = new MoveTransaction() { piece = piece, target = dest };
             if (transaction.IsValid()) {
                 playingState.QueueUpValidTransaction(transaction);
                 return true;

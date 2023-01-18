@@ -3,24 +3,39 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class LoserState : State {
+    IEnumerator raiseOcean;
+
     public LoserState() {
-        GameState.Board.StartCoroutine(RaiseOcean());
+        raiseOcean = RaiseOcean();
+    }
+
+    public override void Update() {
+        if (raiseOcean != null && !raiseOcean.MoveNext())
+            raiseOcean = null;
     }
 
     public override void End() {
+        GameState.Constants.youLoseUI.SetActive(false);
     }
-
     public IEnumerator RaiseOcean() {
+        // Wait 2 seconds for drama
+        float timeElapsed = 0;
+        while (timeElapsed < 2) {
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+
         var ocean = GameObject.FindGameObjectWithTag("Ocean");
-        if (!ocean) yield break;
+        if (ocean == null)
+            yield break;
 
         Vector3 beginPos = ocean.transform.position;
         Vector3 targetPos = new Vector3(beginPos.x, 2, beginPos.z);
 
         float duration = 2;
 
-        float timeElapsed = 0;
-        if (timeElapsed < duration) {
+        timeElapsed = 0;
+        while (timeElapsed < duration) {
             if (ocean) {
                 float t = timeElapsed / duration;
                 t = 1 - (1 - t) * (1 - t); // ease out quad
@@ -29,5 +44,7 @@ public class LoserState : State {
             timeElapsed += Time.deltaTime;
             yield return null;
         }
+
+        GameState.Constants.youLoseUI.SetActive(true);
     }
 }
