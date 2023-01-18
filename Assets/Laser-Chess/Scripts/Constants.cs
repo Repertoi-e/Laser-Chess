@@ -43,6 +43,8 @@ public class Constants : MonoBehaviour {
     public GameObject youWinUI;
     public GameObject youLoseUI;
 
+    public GameObject menuUI;
+
 
     void Start() {
         GameState.Constants = this;    

@@ -67,6 +67,9 @@ public class AttackPieceInteraction : PieceInteraction {
     }
 
     void ShowAttackButton(Vector3 pos) {
+        if (humanTurn == null)
+            return;
+
         var attackButton = GameObject.FindGameObjectWithTag("AttackButtonUIWorld");
         if (attackButton) {
             attackButton.transform.position = pos;

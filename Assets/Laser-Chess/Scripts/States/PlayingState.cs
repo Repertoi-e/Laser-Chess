@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 public class PlayingState : State {
     private Turn turn;
@@ -85,7 +86,6 @@ public class PlayingState : State {
         //
         // Now check for victory conditions:
         //
-
         var pieces = from c in GameObject.FindGameObjectsWithTag("Piece")
                      select c.GetComponent<Piece>();
 

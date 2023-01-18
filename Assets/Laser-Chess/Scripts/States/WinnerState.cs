@@ -17,7 +17,7 @@ public class WinnerState : State {
     }
 
     public override void Update() {
-        if (elapsedTime < 5) {
+        if (elapsedTime < 10) {
             elapsedTime += Time.deltaTime;
         } else {
             if (rotator != null)

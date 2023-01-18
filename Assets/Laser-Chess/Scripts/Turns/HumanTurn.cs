@@ -18,6 +18,12 @@ public class HumanTurn : Turn {
     }
 
     public override void End() {
+        var attackButton = GameObject.FindGameObjectWithTag("AttackButtonUIWorld");
+        if (attackButton) {
+            attackButton.transform.position = new Vector3(0, 0, -1000);
+        }
+
+        currentPieceInteraction = null;
         GameState.Constants.yourTurnUI.SetActive(false);
     }
 

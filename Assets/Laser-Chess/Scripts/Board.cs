@@ -1,6 +1,8 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
+using UnityEngine.SceneManagement;
 
 public class Board : MonoBehaviour {
     public GameObject tilePrefab;
@@ -23,10 +25,8 @@ public class Board : MonoBehaviour {
 
         GameState.Board = this;
 
-        // Temporary:
-        var playingState = new PlayingState();
+        var playingState = new MenuState();
         GameState.CurrentState = playingState;
-        playingState.Turn = new HumanTurn();
     }
 
     public Tile GetTileAt(Vector3 dest) {
@@ -50,6 +50,44 @@ public class Board : MonoBehaviour {
     public void EndTurnButtonPressed() {
         (GameState.CurrentState as PlayingState)?.EndTurnButtonPressed();
     }
+
+    public void LoadLevel(int num) {
+        // This should be a million times better, but hey.
+        // It's dirty and it works.
+
+        // Remove old units
+        foreach (var p in GameObject.FindGameObjectsWithTag("Piece")) {
+            p.GetComponent<Piece>().HitPoints = 0;
+        }
+
+        if (num >= 1 && num <= 3) {
+            StartCoroutine(LoadLevelAsync(num));
+        } else {
+            Debug.Log("Error, no level " + num);
+        }
+    }
+
+    IEnumerator LoadLevelAsync(int num) {
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(num, LoadSceneMode.Additive);
+
+        while (!asyncLoad.isDone) {
+            yield return null;
+        }
+
+        if (SceneManager.sceneCount > 1) {
+            var newScene = SceneManager.GetSceneAt(1);
+            SceneManager.MergeScenes(newScene, SceneManager.GetActiveScene());
+        }
+
+        var playingState = new PlayingState();
+        GameState.CurrentState = playingState;
+        playingState.Turn = new HumanTurn();
+    }
+
+    public void GoToMenu() {
+        GameState.CurrentState = new MenuState();
+    }
+
 
     void GenerateBoard() {
         var boardTiles = new GameObject("BoardTiles");

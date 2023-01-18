@@ -45,15 +45,18 @@ public abstract class Piece : MonoBehaviour {
     public int HitPoints {
         get => hitPoints;
         set {
-            var playingState = GameState.CurrentState as PlayingState;
-            if (playingState == null)
-                return;
             hitPoints = value;
             if (hitPoints <= 0) {
                 hitPoints = 0;
-                var transaction = new PieceDeathTransaction() { piece = this };
-                if (transaction.IsValid())
-                    playingState.QueueUpValidTransaction(transaction);
+                
+                var playingState = GameState.CurrentState as PlayingState;
+                if (playingState == null) {
+                    Destroy(gameObject);
+                } else {
+                    var transaction = new PieceDeathTransaction() { piece = this };
+                    if (transaction.IsValid())
+                        playingState.QueueUpValidTransaction(transaction);
+                }
             }
             healthBar?.SetHitPoints(hitPoints);
         }

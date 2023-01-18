@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class LoserState : State {
     IEnumerator raiseOcean;
+    Vector3 beginPos;
 
     public LoserState() {
         raiseOcean = RaiseOcean();
@@ -16,7 +17,11 @@ public class LoserState : State {
 
     public override void End() {
         GameState.Constants.youLoseUI.SetActive(false);
+        var ocean = GameObject.FindGameObjectWithTag("Ocean");
+        if (ocean != null)
+            ocean.transform.position = beginPos;
     }
+
     public IEnumerator RaiseOcean() {
         // Wait 2 seconds for drama
         float timeElapsed = 0;
@@ -29,7 +34,7 @@ public class LoserState : State {
         if (ocean == null)
             yield break;
 
-        Vector3 beginPos = ocean.transform.position;
+        beginPos = ocean.transform.position;
         Vector3 targetPos = new Vector3(beginPos.x, 2, beginPos.z);
 
         float duration = 2;
