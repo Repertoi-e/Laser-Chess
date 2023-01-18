@@ -14,16 +14,14 @@ public class AttackPieceInteraction : PieceInteraction {
             return;
 
         AllowedAttackPositions = GetAllowedAttackPositions().ToArray();
-
-        var attackPieces = (from p in
-                                from c in AllowedAttackPositions
-                                select GameState.Board.GetTileAt(c)?.GetPieceAbove()
-                            where p != null && p.IsEnemy != piece.IsEnemy
-                            select p).ToArray();
-        AllowedAttackPieces = (from p in attackPieces
+        AllowedAttackPieces = (from p in
+                                   from c in AllowedAttackPositions
+                                   select GameState.Board.GetTileAt(c)?.GetPieceAbove()
+                               where p != null && p.IsEnemy != piece.IsEnemy
                                select p.gameObject.transform.position).ToArray();
 
-        // Region attacks don't require shooting input
+        // Region attacks don't require input for specific pieces,
+        // so we provide an attack button to stomp.
         if (piece.AttackType == Piece.EAttackType.Region) {
             if (humanTurn != null)
                 ShowAttackButton(piece.transform.position);

@@ -20,14 +20,13 @@ public class PlayingState : State {
     }
 
     public void EndTurnButtonPressed() {
-        if (Turn as HumanTurn == null)
+        if (Turn is not HumanTurn)
             return;
-
         Turn = new AITurn();
     }
 
     // The bool says whether the object is clicked or not.
-    // This book keeping is necessary to dispatch the events below.
+    // This bookkeeping is necessary to dispatch the events below.
     Dictionary<GameObject, bool> previousFrameHovers = new();
     Dictionary<GameObject, bool> frameHovers = new();
 
@@ -83,25 +82,34 @@ public class PlayingState : State {
             return; // don't do any more logic while transactions are occuring
         }
 
-        int commandUnitsCount = (from e in
-                                     from c in GameObject.FindGameObjectsWithTag("Piece")
-                                     select c.GetComponent<Piece>()
-                                 where e.IsEnemy && e is CommandUnit
-                                 select e).Count();
-        if (commandUnitsCount == 0) {
+        //
+        // Now check for victory conditions:
+        //
+
+        var pieces = from c in GameObject.FindGameObjectsWithTag("Piece")
+                     select c.GetComponent<Piece>();
+
+        // no more command units!
+        var enemyPieces = from e in pieces where e.IsEnemy select e;
+        if (enemyPieces.Count(e => e is CommandUnit) == 0) {
             GameState.CurrentState = new WinnerState();
             return;
         }
 
-        int playerUnitsCount = (from e in
-                                    from c in GameObject.FindGameObjectsWithTag("Piece")
-                                    select c.GetComponent<Piece>()
-                                where !e.IsEnemy
-                                select e).Count();
+        // drone reached first row
+        if (enemyPieces.Count(e => e is Drone && e.gameObject.transform.position.z == 0) > 0) {
+            GameState.CurrentState = new LoserState();
+            return;
+        }
+
+        int playerUnitsCount = (from e in pieces where !e.IsEnemy select e).Count();
         if (playerUnitsCount == 0) {
             GameState.CurrentState = new LoserState();
             return;
         }
+
+        // If not, procede with ray casting to see if player 
+        // is interacting with anything on the board:
 
         bool mousePressed = Input.GetMouseButton(0);
 

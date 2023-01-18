@@ -12,6 +12,7 @@ public class Tile : MonoBehaviour {
     }
 
     void Update() {
+        // This part handles smoothly switching the glow color of the tile
         if (elapsedTime < GameState.Constants.kGlowAnimationDuration) {
             float t = elapsedTime / GameState.Constants.kGlowAnimationDuration;
             t = t * t * (3f - 2f * t);
@@ -21,7 +22,14 @@ public class Tile : MonoBehaviour {
         } else {
             material.SetColor("_EmissionColor", targetColor);
         }
+        // .. and the long messy part here looks through all possible states
+        // of when a tile might glow to give feedback. Sometimes they can
+        // override each other.
 
+        // I choose to update every frame, because that way
+        // we are guaranteed to not have bugs with not updating
+        // properly the target color of the tiles. 
+        // However, there is something to be said about performance.
         Color newTargetColor = Color.black;
 
         PlayingState playingState = GameState.CurrentState as PlayingState;

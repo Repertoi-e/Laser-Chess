@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// This acts as a mini-tutorial and gives feedback
+// when trying to do an invalid action. It's the text
+// that appears in the top-middle of the screen.
 public class FeedbackText : MonoBehaviour {
-    private TMPro.TextMeshProUGUI text;
-
+    TMPro.TextMeshProUGUI text;
     float elapsedTime = 1000;
 
     void Start() {

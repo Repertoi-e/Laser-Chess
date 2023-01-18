@@ -37,13 +37,17 @@ public class MoveTransaction : Transaction {
           : Mathf.Pow(2, -10 * x) * Mathf.Sin((x * 10 - 0.75f) * c4) + 1;
     }
 
+    // Transactions are like coroutines and execute on multiple frames.
+    // Btw I love how cleanly this can be done in C#.
     public override IEnumerator Execute() {
         var dir = target - piece.gameObject.transform.position;
         float distance = dir.magnitude;
         dir /= distance; // normalize
 
+        // Execute move animation, lerping position and rotation to the target along the way.
+
         float timeToTake = distance / GameState.Constants.kUnitSpeed;
-        float movementTime = 0.8f * timeToTake; // the other 20% are for the final rotation adjustment
+        float movementTime = 0.8f * timeToTake; // the other part is for the final rotation adjustment
 
         var targetQuat = Quaternion.LookRotation(dir);
 
@@ -55,8 +59,8 @@ public class MoveTransaction : Transaction {
         while (timePassed < movementTime) {
             float t = timePassed / movementTime;
 
-            float posEase =  t;
-            float rotEase =  easeOutElastic(t / 2);
+            float posEase = t;
+            float rotEase = easeOutElastic(t / 2);
 
             piece.gameObject.transform.position = Vector3.Lerp(beginPosition, target, posEase);
             piece.gameObject.transform.rotation = Quaternion.Lerp(beginRotation, targetQuat, rotEase);
@@ -81,7 +85,8 @@ public class MoveTransaction : Transaction {
 
         piece.gameObject.transform.rotation = endTargetQuat;
 
-        // After moving, go into attack mode for better gameplay flow
+        // After moving, if it's the humans turn,
+        // go into attack mode for the piece (for better gameplay flow).
         var humanTurn = (GameState.CurrentState as PlayingState)?.Turn as HumanTurn;
         if (humanTurn != null) {
             humanTurn.DoPieceInteraction(piece);

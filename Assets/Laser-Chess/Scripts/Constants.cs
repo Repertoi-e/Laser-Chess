@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Constants : MonoBehaviour {
 
+    // This here is a dump for stuff that can be tweaked in the editor
+
     public float kGlowAnimationDuration = 0.1f;
 
     public Color kGlowEnemy;
@@ -13,7 +15,6 @@ public class Constants : MonoBehaviour {
     public Color kAllyColor;
 
     public Color kGlowHoverAttackColor;
-
     public Color kGlowAvailableAction;
 
     public Color kTileGlowCanMove = new Color(0.35f, 0.35f, 0.35f, 0.35f);

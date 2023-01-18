@@ -26,7 +26,7 @@ public class AITurn : Turn {
         foreach (var p in from p in from p in GameObject.FindGameObjectsWithTag("Piece") select p.GetComponent<Piece>() where p.IsEnemy select p) {
             pieces.Enqueue(GetPriority(p), p);
         }
-        play = Play();
+        play = Play(); // This plays out along many frames.
 
         GameState.Constants.aiTurnUI.SetActive(true);
     }
@@ -36,8 +36,10 @@ public class AITurn : Turn {
     }
 
     public override void Update() {
-        if (!play.MoveNext())
+        if (!play.MoveNext()) {
             play = null;
+            playingState.Turn = new HumanTurn();
+        }
     }
 
     IEnumerator Play() {
@@ -54,13 +56,10 @@ public class AITurn : Turn {
                 if (p.AttackType == Piece.EAttackType.Region && Stomp(p, api))
                     new WaitForSeconds(0.5f);
             }
-
             yield return new WaitForSeconds(0.8f);
         }
 
         yield return new WaitForSeconds(0.5f);
-
-        playingState.Turn = new HumanTurn();
     }
 
     IEnumerable<Piece> GetPlayerPieces() {
@@ -84,11 +83,14 @@ public class AITurn : Turn {
 
                 Vector3 dir = (closest.gameObject.transform.position - p.gameObject.transform.position).normalized;
 
+                // Get the vector with the dot product closest to 0,
+                // i.e. the best direction to move closer.
                 dest = moveInteraction.AllowedMovePositions.OrderBy(x => Vector3.Dot(dir, (p.gameObject.transform.position - x).normalized)).First();
             } else if (p is CommandUnit) {
-                // TODO!
+                // TODO !
                 dest = p.gameObject.transform.position;
             } else {
+                // Unknown unit type ?
                 Debug.Assert(false);
                 dest = Vector3.zero;
             }
@@ -102,12 +104,14 @@ public class AITurn : Turn {
         return false;
     }
 
-    // Sigh. Shoot and Stomp are basically identical...
+    // Sigh. Shoot() and Stomp() are basically identical...
 
     bool Shoot(Piece p, AttackPieceInteraction api) {
         // TODO: Have some heuristic to determine a better move
         // if multiple targets are available (e.g. team up multiple
         // drones against 1 piece).
+        // Right now it chooses the first target.
+        // At least maybe make it random?
         var target = GameState.Board.GetTileAt(api.AllowedAttackPieces[0])?.GetPieceAbove();
 
         var transaction = new AttackTransaction(target) { piece = p };
@@ -119,9 +123,6 @@ public class AITurn : Turn {
     }
 
     bool Stomp(Piece p, AttackPieceInteraction api) {
-        // TODO: Have some heuristic to determine a better move
-        // if multiple targets are available (e.g. team up multiple
-        // drones against 1 piece).
         var targets = (from c in api.AllowedAttackPieces select GameState.Board.GetTileAt(c).GetPieceAbove()).ToArray();
 
         var transaction = new AttackTransaction(targets) { piece = p };

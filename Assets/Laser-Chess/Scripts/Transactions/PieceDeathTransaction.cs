@@ -15,6 +15,7 @@ public class PieceDeathTransaction : Transaction {
 
         GameObject.Destroy(piece.gameObject);
 
+        // Wait 1 sec
         float timeElapsed = 0;
         while (timeElapsed < 1) {
             timeElapsed += Time.deltaTime;

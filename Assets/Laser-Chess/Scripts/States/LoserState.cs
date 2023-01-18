@@ -3,31 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class LoserState : State {
-    GameObject ocean = null;
-    float timeElapsed = 0;
-
-    Vector3 oceanBeginPos;
-    Vector3 oceanTargetPos;
-
     public LoserState() {
-        ocean = GameObject.FindGameObjectWithTag("Ocean");
-        if (ocean) {
-            oceanBeginPos = ocean.transform.position;
-            oceanTargetPos = new Vector3(oceanBeginPos.x, 2, oceanBeginPos.z);
-        }
+        GameState.Board.StartCoroutine(RaiseOcean());
     }
 
     public override void End() {
     }
 
-    public override void Update() {
-        if (timeElapsed < 2) {
+    public IEnumerator RaiseOcean() {
+        var ocean = GameObject.FindGameObjectWithTag("Ocean");
+        if (!ocean) yield break;
+
+        Vector3 beginPos = ocean.transform.position;
+        Vector3 targetPos = new Vector3(beginPos.x, 2, beginPos.z);
+
+        float duration = 2;
+
+        float timeElapsed = 0;
+        if (timeElapsed < duration) {
             if (ocean) {
-                float t = timeElapsed / 2;
+                float t = timeElapsed / duration;
                 t = 1 - (1 - t) * (1 - t); // ease out quad
-                ocean.transform.position = Vector3.Lerp(oceanBeginPos, oceanTargetPos, t);
+                ocean.transform.position = Vector3.Lerp(beginPos, targetPos, t);
             }
             timeElapsed += Time.deltaTime;
+            yield return null;
         }
     }
 }

@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public abstract class PieceInteraction {
     protected PlayingState playingState;
     protected HumanTurn humanTurn;
@@ -43,12 +39,5 @@ public abstract class PieceInteraction {
     }
 
     public virtual void OnPieceClicked(Piece target) {
-    }
-}
-
-// This is a dummy class so Visual Studio shuts up 
-// https://stackoverflow.com/questions/64749385/predefined-type-system-runtime-compilerservices-isexternalinit-is-not-defined
-namespace System.Runtime.CompilerServices {
-    internal static class IsExternalInit {
     }
 }

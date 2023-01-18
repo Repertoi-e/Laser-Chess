@@ -1,6 +1,8 @@
 using UnityEngine;
 
 public class HealthBar : MonoBehaviour {
+    // Spawns "max" little health points and centers them below the piece.
+    // When unit loses health they get hidden.
     public void SetMaxHitPoints(int max) {
         Debug.Assert(max >= 1);
 

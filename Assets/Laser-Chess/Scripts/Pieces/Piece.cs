@@ -61,19 +61,24 @@ public abstract class Piece : MonoBehaviour {
 
     private float elapsedTime = 0;
 
-    private List<Material> materials;
+    private Material[] materials;
     private Color targetColor;
 
     void Start() {
-        materials = (from c in GetComponentsInChildren<Renderer>() select c.material).ToList();
+        materials = (from c in GetComponentsInChildren<Renderer>() select c.material).ToArray();
     }
 
     ~Piece() {
+        // God knows when the garbage collected calls this,
+        // but when the unit dies the health bar becomes 0 anyway.
+        // So it's invisible to the player.
+        // Eventually it will go away from the scene.
         Destroy(healthBar?.gameObject);
     }
 
     void Update() {
-        // We need to wait for Constants to get initted, that's why this is not in Start()
+        // We need to wait for Constants to get initted,
+        // that's why this is not in Start()... Sigh...
         if (!healthBar) {
             var hp = Instantiate(GameState.Constants.kHealthBarTemplate);
             healthBar = hp.GetComponent<HealthBar>();
@@ -84,8 +89,11 @@ public abstract class Piece : MonoBehaviour {
                 Destroy(gameObject);
         }
 
+        // Move along the health bar since it needs to point to the camera
+        // and parenting it with this piece messes it up on rotations.
         healthBar.gameObject.transform.position = transform.position;
 
+        // Pieces glow like tiles on hover.
         if (elapsedTime < GameState.Constants.kGlowAnimationDuration) {
             float t = elapsedTime / GameState.Constants.kGlowAnimationDuration;
             t = t * t * (3f - 2f * t);
